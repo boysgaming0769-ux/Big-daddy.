@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Big Daddy - Premium Color Betting & Lottery Platform</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Custom Premium Styling Elements */
+        body {
+            background-color: #090b0e;
+            color: #f3f4f6;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+        .gold-gradient {
+            background: linear-gradient(135deg, #ffe259 0%, #ffa751 100%);
+        }
+        .gold-text {
+            background: linear-gradient(135deg, #ffe259 0%, #ffa751 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .card-dark {
+            background: linear-gradient(145deg, #151a22, #1b222c);
+            border: 1px solid rgba(255, 167, 81, 0.1);
+        }
+        /* Hide scrollbar for clean UI */
+        ::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+<body class="pb-24 max-w-md mx-auto shadow-2xl relative min-h-screen">
+
+    <header class="bg-[#11161e] border-b border-gray-800 p-4 sticky top-0 z-50 flex justify-between items-center">
+        <div class="flex items-center space-x-2">
+            <i class="fa-solid fa-crown text-yellow-500 text-2xl animate-pulse"></i>
+            <span class="text-2xl font-black tracking-wider gold-text uppercase">Big Daddy</span>
+        </div>
+        <div class="flex items-center space-x-3">
+            <a href="login.html" class="text-sm font-semibold text-gray-300 hover:text-white px-3 py-1.5 rounded-lg border border-gray-700">Login</a>
+            <a href="register.html" class="text-sm font-bold gold-gradient text-black px-4 py-1.5 rounded-lg shadow-lg hover:opacity-90">Register</a>
+        </div>
+    </header>
+
+    <div class="p-4">
+        <div class="gold-gradient rounded-2xl p-6 text-black relative overflow-hidden shadow-xl">
+            <div class="absolute right-[-20px] bottom-[-20px] opacity-20">
+                <i class="fa-solid fa-dice text-9xl text-black"></i>
+            </div>
+            <span class="bg-black text-[#ffa751] text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wide">Mega Event</span>
+            <h2 class="text-3xl font-extrabold mt-3 leading-tight">100% Welcome<br>Bonus First Deposit</h2>
+            <p class="text-sm font-medium mt-1 opacity-90">Join the ultimate color guessing challenge today!</p>
+            <a href="game.html" class="inline-block bg-black text-white font-bold text-xs px-5 py-2.5 rounded-xl mt-4 uppercase shadow-md">Play Now <i class="fa-solid fa-circle-play ml-1"></i></a>
+        </div>
+    </div>
+
+    <div class="px-4 mb-4">
+        <div class="card-dark rounded-xl p-4 text-center">
+            <p class="text-xs text-gray-400 font-bold tracking-widest uppercase">🎯 BIG DADDY SUPER JACKPOT</p>
+            <div class="text-3xl font-black text-yellow-400 mt-1 tracking-wider" id="jackpot-counter">
+                ₹5,48,29,190.40
+            </div>
+        </div>
+    </div>
+
+    <div class="px-4 py-2">
+        <h3 class="text-lg font-bold mb-3 flex items-center"><i class="fa-solid fa-gamepad text-yellow-500 mr-2"></i> Hot Games</h3>
+        <div class="grid grid-cols-2 gap-4">
+            
+            <a href="game.html" class="card-dark rounded-2xl p-4 block hover:scale-[1.02] transition-transform duration-200">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-green-500 via-purple-500 to-red-500 flex items-center justify-center shadow-lg">
+                    <i class="fa-solid fa-palette text-white text-xl"></i>
+                </div>
+                <h4 class="font-bold text-base mt-3">Win Go</h4>
+                <p class="text-xs text-gray-400 mt-0.5">Green/Red/Violet 1-Min</p>
+                <div class="mt-3 flex justify-between items-center">
+                    <span class="text-[10px] bg-green-500/10 text-green-400 px-2 py-0.5 rounded-full font-bold">Popular</span>
+                    <i class="fa-solid fa-circle-chevron-right text-yellow-500"></i>
+                </div>
+            </a>
+
+            <a href="game.html" class="card-dark rounded-2xl p-4 block hover:scale-[1.02] transition-transform duration-200">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-yellow-500 to-orange-600 flex items-center justify-center shadow-lg">
+                    <i class="fa-solid fa-cubes text-white text-xl"></i>
+                </div>
+                <h4 class="font-bold text-base mt-3">TRX Win</h4>
+                <p class="text-xs text-gray-400 mt-0.5">Crypto block hash game</p>
+                <div class="mt-3 flex justify-between items-center">
+                    <span class="text-[10px] bg-yellow-500/10 text-yellow-400 px-2 py-0.5 rounded-full font-bold">Fast Cash</span>
+                    <i class="fa-solid fa-circle-chevron-right text-yellow-500"></i>
+                </div>
+            </a>
+            
+        </div>
+    </div>
+
+    <div class="px-4 py-4">
+        <div class="flex justify-between items-center mb-3">
+            <h3 class="text-lg font-bold flex items-center"><i class="fa-solid fa-trophy text-yellow-500 mr-2"></i> Live Winnings</h3>
+            <span class="text-xs text-green-400 flex items-center"><span class="h-2 w-2 rounded-full bg-green-500 animate-ping mr-1.5"></span> Live update</span>
+        </div>
+        <div class="card-dark rounded-xl divide-y divide-gray-800/60 overflow-hidden" id="live-feed-box">
+            <div class="p-3 flex justify-between items-center text-xs">
+                <div class="flex items-center space-x-2">
+                    <div class="w-7 h-7 rounded-full bg-gray-700 flex items-center justify-center font-bold text-[10px] text-yellow-400">91***42</div>
+                    <div><p class="font-bold">User Feed</p><p class="text-[10px] text-gray-500">1 second ago</p></div>
+                </div>
+                <div class="text-right">
+                    <p class="text-green-400 font-bold">+₹4,900.00</p>
+                    <p class="text-[10px] text-gray-400">Won Win Go</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="px-4 py-2 grid grid-cols-3 gap-2 text-center text-[11px] text-gray-400">
+        <div class="p-2 card-dark rounded-xl"><i class="fa-solid fa-shield-halved text-yellow-500 text-lg mb-1 block"></i> 100% Safe</div>
+        <div class="p-2 card-dark rounded-xl"><i class="fa-solid fa-bolt text-yellow-500 text-lg mb-1 block"></i> Fast Recharge</div>
+        <div class="p-2 card-dark rounded-xl"><i class="fa-solid fa-headset text-yellow-500 text-lg mb-1 block"></i> 24/7 Support</div>
+    </div>
+
+    <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-[#11161e] border-t border-gray-800 grid grid-cols-5 py-2 text-center z-50">
+        <a href="index.html" class="text-yellow-500 flex flex-col items-center justify-center">
+            <i class="fa-solid fa-house text-lg"></i>
+            <span class="text-[10px] mt-1 font-bold">Home</span>
+        </a>
+        <a href="promotion.html" class="text-gray-400 hover:text-gray-200 flex flex-col items-center justify-center">
+            <i class="fa-solid fa-share-nodes text-lg"></i>
+            <span class="text-[10px] mt-1">Invite</span>
+        </a>
+        <a href="game.html" class="text-gray-400 flex flex-col items-center justify-center relative -top-4">
+            <div class="w-12 h-12 gold-gradient rounded-full flex items-center justify-center text-black shadow-lg border-4 border-[#090b0e]">
+                <i class="fa-solid fa-gamepad text-xl"></i>
+            </div>
+            <span class="text-[10px] mt-0.5 font-bold text-yellow-500">Bet</span>
+        </a>
+        <a href="recharge.html" class="text-gray-400 hover:text-gray-200 flex flex-col items-center justify-center">
+            <i class="fa-solid fa-wallet text-lg"></i>
+            <span class="text-[10px] mt-1">Wallet</span>
+        </a>
+        <a href="profile.html" class="text-gray-400 hover:text-gray-200 flex flex-col items-center justify-center">
+            <i class="fa-solid fa-user text-lg"></i>
+            <span class="text-[10px] mt-1">Mine</span>
+        </a>
+    </nav>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
+
+        // Your New Web App's production configuration details
+        const firebaseConfig = {
+          apiKey: "AIzaSyBjB5uOFrL8OfuqAHWlyB5_p_say0KrFuY",
+          authDomain: "big-daddy-7422f.firebaseapp.com",
+          databaseURL: "https://big-daddy-7422f-default-rtdb.firebaseio.com",
+          projectId: "big-daddy-7422f",
+          storageBucket: "big-daddy-7422f.firebasestorage.app",
+          messagingSenderId: "528194459346",
+          appId: "1:528194459346:web:458044786db1c36281ff0b",
+          measurementId: "G-ZY2D9HT28C"
+        };
+
+        // Initialize Firebase Session instance
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        console.log("Big Daddy Database App Initialized Successfully with New Config.");
+    </script>
+
+    <script>
+        // 1. Live Simulated Jackpot Counter Ticker Animation
+        let jackpotVal = 54829190.40;
+        setInterval(() => {
+            jackpotVal += Math.random() * 45;
+            document.getElementById('jackpot-counter').innerText = '₹' + jackpotVal.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        }, 2000);
+
+        // 2. Automated Dynamic Fake Payout Feed Rotator
+        const sampleNames = ["73***91", "98***52", "91***04", "88***67", "62***88"];
+        const sampleAmounts = ["150.00", "4,200.00", "850.00", "12,000.00", "600.00"];
+        const feedBox = document.getElementById('live-feed-box');
+
+        setInterval(() => {
+            let randName = sampleNames[Math.floor(Math.random() * sampleNames.length)];
+            let randAmt = sampleAmounts[Math.floor(Math.random() * sampleAmounts.length)];
+            
+            const itemHTML = `
+            <div class="p-3 flex justify-between items-center text-xs opacity-0 transform translate-y-2 transition-all duration-500" id="new-feed-item">
+                <div class="flex items-center space-x-2">
+                    <div class="w-7 h-7 rounded-full bg-gray-700 flex items-center justify-center font-bold text-[10px] text-yellow-400">${randName}</div>
+                    <div><p class="font-bold">User Feed</p><p class="text-[10px] text-gray-500">Just now</p></div>
+                </div>
+                <div class="text-right">
+                    <p class="text-green-400 font-bold">+₹${randAmt}</p>
+                    <p class="text-[10px] text-gray-400">Won Win Go</p>
+                </div>
+            </div>`;
+            
+            feedBox.innerHTML = itemHTML + feedBox.innerHTML;
+            if (feedBox.children.length > 5) feedBox.removeChild(feedBox.lastChild);
+            
+            setTimeout(() => {
+                const activeItem = document.getElementById('new-feed-item');
+                if(activeItem) {
+                    activeItem.classList.remove('opacity-0', 'translate-y-2');
+                    activeItem.removeAttribute('id');
+                }
+            }, 50);
+        }, 3500);
+    </script>
+</body>
+</html>
+
+<html>
+<head>
+  <meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8">
+  <title>Hello, World!</title>
+</head>
+<body>
+  <h1>
+    Hello, World!
+  </h1>
+</body>
+</html>

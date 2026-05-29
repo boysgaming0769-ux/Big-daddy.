@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Big Daddy - Secure Withdrawal</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background-color: #090b0e; color: #f3f4f6; font-family: 'Segoe UI', sans-serif; }
+        .gold-gradient { background: linear-gradient(135deg, #ffe259 0%, #ffa751 100%); }
+        .gold-text { background: linear-gradient(135deg, #ffe259 0%, #ffa751 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .card-dark { background: linear-gradient(145deg, #151a22, #1b222c); border: 1px solid rgba(255, 167, 81, 0.1); }
+        input:focus, select:focus { outline: none; border-color: #ffa751 !important; box-shadow: 0 0 10px rgba(255, 167, 81, 0.2); }
+    </style>
+</head>
+<body class="pb-24 max-w-md mx-auto shadow-2xl relative min-h-screen">
+
+    <header class="bg-[#11161e] border-b border-gray-800 p-4 sticky top-0 z-50 flex items-center">
+        <a href="game.html" class="text-gray-400 hover:text-white mr-4 text-xl">
+            <i class="fa-solid fa-chevron-left"></i>
+        </a>
+        <h1 class="text-xl font-bold tracking-wide text-white">Withdraw Funds</h1>
+    </header>
+
+    <div class="p-4">
+        <div class="card-dark rounded-2xl p-5 flex justify-between items-center relative overflow-hidden shadow-xl">
+            <div>
+                <p class="text-xs text-gray-400 font-semibold tracking-wider">Withdrawable Balance</p>
+                <h3 class="text-3xl font-black mt-1 text-white">₹<span id="displayWalletBalance">0.00</span></h3>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-green-500/10 flex items-center justify-center border border-green-500/20">
+                <i class="fa-solid fa-money-bill-transfer text-green-400 text-xl"></i>
+            </div>
+        </div>
+    </div>
+
+    <main class="px-4 space-y-4">
+        
+        <div class="card-dark rounded-2xl p-5 space-y-4">
+            <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider flex items-center">
+                <i class="fa-solid fa-building-columns text-yellow-500 mr-2"></i> 1. Bank Account Information
+            </h3>
+            
+            <div class="space-y-3">
+                <div>
+                    <label class="block text-[11px] text-gray-400 mb-1">Account Holder Name</label>
+                    <input type="text" id="bankUserRealName" placeholder="As per bank passbook" required
+                        class="w-full bg-[#0c1015] border border-gray-800 rounded-xl py-2.5 px-4 text-sm text-white transition-all">
+                </div>
+
+                <div>
+                    <label class="block text-[11px] text-gray-400 mb-1">Account Number</label>
+                    <input type="password" id="bankAccountNumber" placeholder="Enter bank account number" required
+                        class="w-full bg-[#0c1015] border border-gray-800 rounded-xl py-2.5 px-4 text-sm text-white font-mono tracking-wider transition-all">
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-[11px] text-gray-400 mb-1">IFSC Code</label>
+                        <input type="text" id="bankIfscCode" placeholder="SBIN00XXXXX" maxlength="11" required
+                            class="w-full bg-[#0c1015] border border-gray-800 rounded-xl py-2.5 px-4 text-sm text-white font-mono uppercase tracking-wider transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] text-gray-400 mb-1">Bank Name</label>
+                        <input type="text" id="bankNameString" placeholder="Ex: SBI, HDFC" required
+                            class="w-full bg-[#0c1015] border border-gray-800 rounded-xl py-2.5 px-4 text-sm text-white transition-all">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-dark rounded-2xl p-5 space-y-4">
+            <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider flex items-center">
+                <i class="fa-solid fa-indian-rupee-sign text-yellow-500 mr-2"></i> 2. Withdrawal Amount
+            </h3>
+
+            <div>
+                <div class="relative">
+                    <span class="absolute left-4 top-3 text-lg font-bold text-gray-500">₹</span>
+                    <input type="number" id="withdrawAmountInput" placeholder="Min ₹300 - Max ₹50,000" min="300" required
+                        class="w-full bg-[#0c1015] border border-gray-800 rounded-xl py-3 pl-9 pr-4 text-lg font-black text-yellow-400 transition-all">
+                </div>
+                <div class="flex justify-between items-center mt-2 px-1">
+                    <span class="text-[10px] text-gray-500">Fee: ₹0.00 (Free)</span>
+                    <span class="text-[10px] text-red-400 font-medium">*Minimum Withdrawal: ₹300</span>
+                </div>
+            </div>
+
+            <div class="bg-yellow-500/5 border border-yellow-500/10 rounded-xl p-3 flex space-x-3 text-xs text-gray-400 leading-relaxed">
+                <i class="fa-solid fa-shield-halved text-yellow-500 text-base mt-0.5"></i>
+                <p>Galat bank details dene par aapka withdrawal reject ya hold ho sakta hai. Request submit karne ke baad admin verification me 1-6 ghante lag sakte hain.</p>
+            </div>
+
+            <button onclick="executeWithdrawalPayload()" class="w-full gold-gradient text-black font-extrabold py-3.5 rounded-xl shadow-lg active:scale-[0.99] transition-transform text-center tracking-wide uppercase text-sm font-bold cursor-pointer">
+                Submit Payout Request
+            </button>
+        </div>
+    </main>
+
+    <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-[#11161e] border-t border-gray-800 grid grid-cols-5 py-2 text-center z-50">
+        <a href="index.html" class="text-gray-400 flex flex-col items-center justify-center"><i class="fa-solid fa-house text-lg"></i><span class="text-[10px] mt-1">Home</span></a>
+        <a href="promotion.html" class="text-gray-400 flex flex-col items-center justify-center"><i class="fa-solid fa-share-nodes text-lg"></i><span class="text-[10px] mt-1">Invite</span></a>
+        <a href="game.html" class="text-gray-400 flex flex-col items-center justify-center relative -top-4">
+            <div class="w-12 h-12 gold-gradient rounded-full flex items-center justify-center text-black border-4 border-[#090b0e]"><i class="fa-solid fa-gamepad text-xl"></i></div>
+            <span class="text-[10px] mt-0.5 font-bold text-yellow-500">Bet</span>
+        </a>
+        <a href="recharge.html" class="text-gray-400 flex flex-col items-center justify-center"><i class="fa-solid fa-wallet text-lg"></i><span class="text-[10px] mt-1">Wallet</span></a>
+        <a href="profile.html" class="text-yellow-500 flex flex-col items-center justify-center"><i class="fa-solid fa-user text-lg"></i><span class="text-[10px] mt-1">Mine</span></a>
+    </nav>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getDatabase, ref, onValue, set, get, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        // Your New Web App's production configuration details
+        const firebaseConfig = {
+          apiKey: "AIzaSyBjB5uOFrL8OfuqAHWlyB5_p_say0KrFuY",
+          authDomain: "big-daddy-7422f.firebaseapp.com",
+          databaseURL: "https://big-daddy-7422f-default-rtdb.firebaseio.com",
+          projectId: "big-daddy-7422f",
+          storageBucket: "big-daddy-7422f.firebasestorage.app",
+          messagingSenderId: "528194459346",
+          appId: "1:528194459346:web:458044786db1c36281ff0b",
+          measurementId: "G-ZY2D9HT28C"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const database = getDatabase(app);
+
+        let currentUser = null;
+        let activeWalletBalance = 0;
+
+        // 1. Session Auth Hook & Fetch Dynamic User Balance
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+                onValue(ref(database, 'users/' + user.uid), (snapshot) => {
+                    const data = snapshot.val();
+                    if(data) {
+                        activeWalletBalance = parseFloat(data.walletBalance || 0);
+                        document.getElementById('displayWalletBalance').innerText = activeWalletBalance.toFixed(2);
+                    }
+                });
+            } else {
+                alert("Session expired. Please log in.");
+                window.location.href = "login.html";
+            }
+        });
+
+        // 2. Process Withdrawal Request payload
+        window.executeWithdrawalPayload = function() {
+            const amount = parseInt(document.getElementById('withdrawAmountInput').value);
+            const name = document.getElementById('bankUserRealName').value.trim();
+            const accNum = document.getElementById('bankAccountNumber').value.trim();
+            const ifsc = document.getElementById('bankIfscCode').value.trim().toUpperCase();
+            const bankName = document.getElementById('bankNameString').value.trim();
+
+            // Form validations checks
+            if(!name || !accNum || !ifsc || !bankName) {
+                alert("Please fill out all bank account fields correctly.");
+                return;
+            }
+            if(isNaN(amount) || amount < 300) {
+                alert("Minimum withdrawal limit is ₹300.");
+                return;
+            }
+            if(amount > activeWalletBalance) {
+                alert("Insufficient funds! Your withdrawable balance is lower than entered amount.");
+                return;
+            }
+
+            // Secure Deduction System (Deduct immediately to lock balance)
+            const updatedLockedBalance = activeWalletBalance - amount;
+            
+            // Database updates mapping 
+            update(ref(database, 'users/' + currentUser.uid), { walletBalance: updatedLockedBalance })
+            .then(() => {
+                const withdrawId = "WIT" + Math.floor(100000 + Math.random() * 900000);
+
+                // Write detailed payload log inside 'withdraw_requests' node for Admin Review Panel
+                set(ref(database, 'withdraw_requests/' + withdrawId), {
+                    withdrawId: withdrawId,
+                    uid: currentUser.uid,
+                    userEmail: currentUser.email || 'Google User',
+                    amount: amount,
+                    bankDetails: {
+                        holderName: name,
+                        accountNumber: accNum,
+                        ifscCode: ifsc,
+                        bankName: bankName
+                    },
+                    status: "Pending", // Admin changes this to Approved after paying manually
+                    timestamp: new Date().toISOString()
+                })
+                .then(() => {
+                    alert(`Withdrawal request of ₹${amount} submitted!\nFunds locked successfully. Admin will credit your bank soon.`);
+                    // Reset input values
+                    document.getElementById('withdrawAmountInput').value = "";
+                    document.getElementById('bankAccountNumber').value = "";
+                });
+            })
+            .catch((err) => {
+                alert("Transaction failed: " + err.message);
+            });
+        }
+    </script>
+</body>
+</html>
+
+<html>
+<head>
+  <meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8">
+  <title>Hello, World!</title>
+</head>
+<body>
+  <h1>
+    Hello, World!
+  </h1>
+</body>
+</html>

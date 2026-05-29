@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<title>Big Daddy - Win Game 30s</title>
+
+<style>
+:root{
+--bg-main:#0b0f19;
+--bg-card:#151c2c;
+--bg-holder:#1e293b;
+--border-color:#232e48;
+--text-main:#ffffff;
+--text-muted:#94a3b8;
+--green:#00b97c;
+--violet:#9c27b0;
+--red:#f44336;
+--yellow:#ff9800;
+}
+
+*{
+box-sizing:border-box;
+margin:0;
+padding:0;
+font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+-webkit-tap-highlight-color:transparent;
+}
+
+body{
+background:#000;
+display:flex;
+justify-content:center;
+color:white;
+}
+
+.app-container{
+width:100%;
+max-width:480px;
+background:var(--bg-main);
+min-height:100vh;
+padding-bottom:30px;
+position:relative;
+}
+
+.app-header{
+background:var(--bg-card);
+padding:15px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+border-bottom:1px solid var(--border-color);
+}
+
+.back-btn{
+color:var(--text-main);
+text-decoration:none;
+font-size:18px;
+display:flex;
+align-items:center;
+gap:5px;
+background:none;
+border:none;
+cursor:pointer;
+}
+
+.header-title{
+font-size:16px;
+font-weight:600;
+}
+
+.balance-card{
+background:linear-gradient(135deg, #ffe259 0%, #ffa751 100%);
+margin:15px;
+padding:20px;
+border-radius:12px;
+color:#000;
+display:flex;
+justify-content:space-between;
+align-items:center;
+box-shadow:0 4px 15px rgba(255,167,81,0.3);
+}
+
+.bal-title{
+font-size:12px;
+font-weight:600;
+text-transform:uppercase;
+opacity:0.8;
+}
+
+.bal-amount{
+font-size:24px;
+font-weight:800;
+margin-top:5px;
+}
+
+.nav-actions{
+display:flex;
+gap:10px;
+}
+
+.action-btn{
+background:rgba(0,0,0,0.1);
+border:1px solid rgba(0,0,0,0.2);
+padding:8px 15px;
+border-radius:20px;
+font-size:12px;
+font-weight:700;
+color:#000;
+text-decoration:none;
+transition:0.2s;
+}
+
+.action-btn:active{
+transform:scale(0.95);
+}
+
+.game-banner{
+background:var(--bg-card);
+margin:0 15px;
+padding:15px;
+border-radius:12px;
+border:1px solid var(--border-color);
+}
+
+.banner-top{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:10px;
+}
+
+.period-label{
+font-size:12px;
+color:var(--text-muted);
+}
+
+.period-id{
+font-size:16px;
+font-weight:700;
+color:var(--text-main);
+font-family:monospace;
+}
+
+.timer-label{
+font-size:12px;
+color:var(--text-muted);
+text-align:right;
+}
+
+.timer-clock{
+font-size:20px;
+font-weight:800;
+color:var(--yellow);
+}
+
+.bet-options{
+margin:15px;
+gap:10px;
+display:grid;
+grid-template-columns:repeat(3, 1fr);
+}
+
+.color-btn{
+border:none;
+padding:12px;
+border-radius:8px;
+color:white;
+font-weight:700;
+font-size:14px;
+cursor:pointer;
+transition:0.2s;
+}
+
+.btn-green { background: var(--green); }
+.btn-violet { background: var(--violet); }
+.btn-red { background: var(--red); }
+
+.color-btn:active, .num-btn:active{
+transform:scale(0.95);
+}
+
+.number-grid{
+margin:15px;
+background:var(--bg-card);
+padding:15px;
+border-radius:12px;
+display:grid;
+grid-template-columns:repeat(5, 1fr);
+gap:8px;
+border:1px solid var(--border-color);
+}
+
+.num-btn{
+border:none;
+background:var(--bg-holder);
+color:white;
+padding:12px 0;
+border-radius:8px;
+font-weight:700;
+font-size:16px;
+cursor:pointer;
+transition:0.2s;
+}
+
+.history-section{
+margin:15px;
+background:var(--bg-card);
+border-radius:12px;
+border:1px solid var(--border-color);
+overflow:hidden;
+}
+
+.tab-header{
+padding:12px 15px;
+font-weight:700;
+font-size:14px;
+border-bottom:1px solid var(--border-color);
+color:var(--yellow);
+background:rgba(255,152,0,0.05);
+}
+
+.history-table{
+width:100%;
+border-collapse:collapse;
+text-align:center;
+font-size:13px;
+}
+
+.history-table th{
+padding:10px;
+background:rgba(255,255,255,0.02);
+color:var(--text-muted);
+font-weight:500;
+font-size:11px;
+text-transform:uppercase;
+}
+
+.history-table td{
+padding:10px;
+border-bottom:1px solid rgba(35,46,72,0.5);
+}
+
+.badge-dot{
+display:inline-block;
+width:8px;
+height:8px;
+border-radius:50%;
+margin-right:5px;
+}
+
+.bg-green { background: var(--green); }
+.bg-red { background: var(--red); }
+.bg-violet { background: var(--violet); }
+
+/* Modal Sheet Styling */
+.modal-backdrop{
+position:fixed;
+top:0; left:0; right:0; bottom:0;
+background:rgba(0,0,0,0.7);
+display:none;
+justify-content:center;
+align-items:flex-end;
+z-index:999;
+}
+
+.bet-sheet{
+width:100%;
+max-width:480px;
+background:var(--bg-card);
+border-top-left-radius:20px;
+border-top-right-radius:20px;
+padding:20px;
+box-shadow:0 -5px 25px rgba(0,0,0,0.5);
+}
+
+.sheet-title{
+font-size:16px;
+font-weight:700;
+margin-bottom:15px;
+}
+
+.amount-box{
+display:flex;
+gap:10px;
+margin:15px 0;
+}
+
+.amount-input{
+flex:1;
+background:var(--bg-main);
+border:1px solid var(--border-color);
+padding:12px;
+border-radius:8px;
+color:white;
+font-size:16px;
+font-weight:700;
+text-align:center;
+}
+
+.confirm-pay-btn{
+width:100%;
+background:linear-gradient(135deg, #ffe259 0%, #ffa751 100%);
+color:black;
+border:none;
+padding:14px;
+border-radius:8px;
+font-weight:800;
+font-size:14px;
+text-transform:uppercase;
+cursor:pointer;
+}
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<div class="app-container">
+    <header class="app-header">
+        <button class="back-btn" onclick="goBack()">
+            <i class="fa-solid fa-chevron-left"></i> Back
+        </button>
+        <div class="header-title">Win Go 30s</div>
+        <a id="supportLinkTelegram" href="#" target="_blank" style="color:var(--text-muted); text-decoration:none; font-size:14px;"><i class="fa-solid fa-headset"></i> Support</a>
+    </header>
+
+    <div class="balance-card">
+        <div>
+            <div class="bal-title">Available Wallet Balance</div>
+            <div class="bal-amount">₹<span id="gameWalletBalance">0.00</span></div>
+        </div>
+        <div class="nav-actions">
+            <a href="recharge.html" class="action-btn">Deposit</a>
+            <a href="withdraw.html" class="action-btn">Withdraw</a>
+        </div>
+    </div>
+
+    <div class="game-banner">
+        <div class="banner-top">
+            <div>
+                <div class="period-label">Period Reference ID</div>
+                <div class="period-id" id="currentPeriodDisplay">Loading...</div>
+            </div>
+            <div>
+                <div class="timer-label">Time Remaining</div>
+                <div class="timer-clock" id="gameCountdownClock">00:30</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bet-options">
+        <button class="color-btn btn-green" onclick="triggerBetPopup('Green')">Join Green</button>
+        <button class="color-btn btn-violet" onclick="triggerBetPopup('Violet')">Join Violet</button>
+        <button class="color-btn btn-red" onclick="triggerBetPopup('Red')">Join Red</button>
+    </div>
+
+    <div class="number-grid">
+        <button class="num-btn" onclick="triggerBetPopup('0')" style="color:var(--violet);">0</button>
+        <button class="num-btn" onclick="triggerBetPopup('1')" style="color:var(--green);">1</button>
+        <button class="num-btn" onclick="triggerBetPopup('2')" style="color:var(--red);">2</button>
+        <button class="num-btn" onclick="triggerBetPopup('3')" style="color:var(--green);">3</button>
+        <button class="num-btn" onclick="triggerBetPopup('4')" style="color:var(--red);">4</button>
+        <button class="num-btn" onclick="triggerBetPopup('5')" style="color:var(--violet);">5</button>
+        <button class="num-btn" onclick="triggerBetPopup('6')" style="color:var(--red);">6</button>
+        <button class="num-btn" onclick="triggerBetPopup('7')" style="color:var(--green);">7</button>
+        <button class="num-btn" onclick="triggerBetPopup('8')" style="color:var(--red);">8</button>
+        <button class="num-btn" onclick="triggerBetPopup('9')" style="color:var(--green);">9</button>
+    </div>
+
+    <div class="history-section">
+        <div class="tab-header"><i class="fa-solid fa-trophy"></i> Recent 30 Game Period History Results</div>
+        <table class="history-table">
+            <thead>
+                <tr>
+                    <th>Period ID</th>
+                    <th>Number</th>
+                    <th>Color Result</th>
+                    <th>Total Price</th>
+                </tr>
+            </thead>
+            <tbody id="gameHistoryTableRows">
+                <tr><td colspan="4" style="color:var(--text-muted); padding:20px;">Synchronizing trends...</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal-backdrop" id="bettingModalSheet">
+    <div class="bet-sheet">
+        <div class="sheet-title">Select Prediction: <span id="popupSelectedSelectionText" style="color:var(--yellow)">None</span></div>
+        <div style="font-size:12px; color:var(--text-muted);">Enter Bet Staking Payout Amount (₹)</div>
+        <div class="amount-box">
+            <input type="number" id="userBettingInputAmount" class="amount-input" value="100" min="10">
+        </div>
+        <div style="display:flex; gap:10px; margin-bottom:15px;">
+            <button onclick="adjustStakePreset(50)" style="flex:1; padding:8px; border-radius:6px; background:var(--bg-holder); color:white; border:none; font-weight:700; font-size:12px;">₹50</button>
+            <button onclick="adjustStakePreset(100)" style="flex:1; padding:8px; border-radius:6px; background:var(--bg-holder); color:white; border:none; font-weight:700; font-size:12px;">₹100</button>
+            <button onclick="adjustStakePreset(500)" style="flex:1; padding:8px; border-radius:6px; background:var(--bg-holder); color:white; border:none; font-weight:700; font-size:12px;">₹500</button>
+            <button onclick="adjustStakePreset(1000)" style="flex:1; padding:8px; border-radius:6px; background:var(--bg-holder); color:white; border:none; font-weight:700; font-size:12px;">₹1000</button>
+        </div>
+        <button class="confirm-pay-btn" onclick="commitBetToDatabase()">Confirm Allocation Payout</button>
+        <button onclick="dismissBetModal()" style="width:100%; margin-top:8px; background:none; border:none; color:var(--text-muted); font-size:12px; font-weight:600; cursor:pointer; padding:5px;">Cancel</button>
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getDatabase, ref, onValue, set, get, update, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBjB5uOFrL8OfuqAHWlyB5_p_say0KrFuY",
+      authDomain: "big-daddy-7422f.firebaseapp.com",
+      databaseURL: "https://big-daddy-7422f-default-rtdb.firebaseio.com",
+      projectId: "big-daddy-7422f",
+      storageBucket: "big-daddy-7422f.firebasestorage.app",
+      messagingSenderId: "528194459346",
+      appId: "1:528194459346:web:458044786db1c36281ff0b",
+      measurementId: "G-ZY2D9HT28C"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const database = getDatabase(app);
+
+    let activeUser = null;
+    let walletFunds = 0;
+    let currentGlobalPeriodId = "";
+    let activeSelection = "";
+    let settlementCheckGate = ""; // Prevents duplicate check cycles on same round
+
+    // 1. Live Session Tracking Loop
+    onAuthStateChanged(auth, (user) => {
+        if(user) {
+            activeUser = user;
+            onValue(ref(database, 'users/' + user.uid), (snapshot) => {
+                const data = snapshot.val();
+                if(data) {
+                    walletFunds = parseFloat(data.walletBalance || 0);
+                    document.getElementById('gameWalletBalance').innerText = walletFunds.toFixed(2);
+                }
+            });
+        } else {
+            window.location.href = "login.html";
+        }
+    });
+
+    // Fetch Global Variables configurations dynamically from Admin mappings
+    onValue(ref(database, 'admin_settings'), (snapshot) => {
+        if(snapshot.exists()) {
+            const settings = snapshot.val();
+            if(settings.support_url) {
+                document.getElementById('supportLinkTelegram').href = settings.support_url;
+            }
+        }
+    });
+
+    // 2. Realtime History Feed Data Sink (30 Results Engine)
+    onValue(ref(database, 'game_results'), (snapshot) => {
+        const historyRows = document.getElementById('gameHistoryTableRows');
+        historyRows.innerHTML = "";
+
+        if (!snapshot.exists()) {
+            historyRows.innerHTML = `<tr><td colspan="4" style="color:var(--text-muted); padding:15px;">No historical data available.</td></tr>`;
+            return;
+        }
+
+        const data = snapshot.val();
+        const entries = Object.values(data).sort((a,b) => b.period.localeCompare(a.period)); 
+        
+        entries.slice(0, 30).forEach(item => {
+            let colorHTML = "";
+            let lowercaseColor = item.color ? item.color.toLowerCase() : "green";
+            
+            if (item.color === "Green") {
+                colorHTML = '<span class="badge-dot bg-green"></span>Green';
+            } else if (item.color === "Red") {
+                colorHTML = '<span class="badge-dot bg-red"></span>Red';
+            } else {
+                colorHTML = '<span class="badge-dot bg-violet"></span>Violet';
+            }
+
+            historyRows.innerHTML += `
+                <tr>
+                    <td style="font-family:monospace; font-weight:700;">${item.period || '----'}</td>
+                    <td style="font-weight:700; color:var(--${lowercaseColor}); font-size:15px;">${item.number ?? '-'}</td>
+                    <td>${colorHTML}</td>
+                    <td style="color:var(--yellow); font-weight:600; font-family:monospace;">₹${parseFloat(item.price || 0).toFixed(2)}</td>
+                </tr>
+            `;
+        });
+    });
+
+    // 3. Centralized Client-Side Sync 30s Clock Core
+    function runGameClock() {
+        setInterval(() => {
+            const now = new Date();
+            const totalSecs = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
+            const periodIndex = Math.floor(totalSecs / 30);
+            
+            const yearStr = now.getFullYear();
+            const monthStr = String(now.getMonth() + 1).padStart(2, '0');
+            const dateStr = String(now.getDate()).padStart(2, '0');
+            const computedPeriodId = `${yearStr}${monthStr}${dateStr}${String(periodIndex).padStart(4, '0')}`;
+            
+            if (computedPeriodId !== currentGlobalPeriodId) {
+                currentGlobalPeriodId = computedPeriodId;
+                document.getElementById('currentPeriodDisplay').innerText = currentGlobalPeriodId;
+            }
+
+            const trackingRemainingSeconds = 30 - (now.getSeconds() % 30);
+            document.getElementById('gameCountdownClock').innerText = "00:" + String(trackingRemainingSeconds).padStart(2, '0');
+
+            // EXACT SETTLEMENT TRIGGER AT INTRO FRAME OF THE ROUND
+            if(trackingRemainingSeconds === 28) {
+                const previousTargetPeriod = String(BigInt(currentGlobalPeriodId) - 1n);
+                if(settlementCheckGate !== previousTargetPeriod) {
+                    settlementCheckGate = previousTargetPeriod;
+                    // Give admin console 2 seconds frame to push results node safely
+                    setTimeout(() => {
+                        syncAndSettleBetsLocally(previousTargetPeriod);
+                    }, 2000);
+                }
+            }
+        }, 1000);
+    }
+    runGameClock();
+
+    // 4. Safe Real-Time Settlement Engine Listener (FULLY INTEGRATED WITH ADMIN CONTROL PATTERNS)
+    async function syncAndSettleBetsLocally(targetPeriodId) {
+        if(!activeUser) return;
+
+        // Fetch injected outcomes calculated via Admin Operational flow lines
+        const resultSnapshot = await get(ref(database, `game_results/${targetPeriodId}`));
+        if(!resultSnapshot.exists()) return; 
+
+        const gameResult = resultSnapshot.val();
+        const winningNum = String(gameResult.number);
+        const winningColor = gameResult.color;
+
+        // Fetch User Bet ticket reference node
+        const userBetRef = ref(database, `bets/${activeUser.uid}_${targetPeriodId}`);
+        const userBetSnapshot = await get(userBetRef);
+        if(!userBetSnapshot.exists()) return;
+
+        const betTicket = userBetSnapshot.val();
+        if(betTicket.status !== "Pending") return; 
+
+        let statusOutcome = "Loss";
+        let computedRewardPayout = 0;
+        const stakedAmount = parseFloat(betTicket.amount);
+
+        // Multipliers matching strategy rule maps
+        if(betTicket.selection === winningNum) {
+            statusOutcome = "Win";
+            computedRewardPayout = stakedAmount * 9; 
+        } else if(betTicket.selection === winningColor) {
+            statusOutcome = "Win";
+            if(winningColor === "Violet") {
+                computedRewardPayout = stakedAmount * 4.5; 
+            } else {
+                computedRewardPayout = stakedAmount * 2; 
+            }
+        }
+
+        // Firebase Transaction execution sequence block to push ledger balance safely
+        if(statusOutcome === "Win" && computedRewardPayout > 0) {
+            const userWalletRef = ref(database, `users/${activeUser.uid}/walletBalance`);
+            await runTransaction(userWalletRef, (currentBalance) => {
+                let bal = parseFloat(currentBalance || 0);
+                return bal + computedRewardPayout;
+            });
+        }
+
+        // Update local ticket schema metadata status tree instantly
+        await update(userBetRef, {
+            status: statusOutcome,
+            payout: computedRewardPayout
+        });
+    }
+
+    // 5. Betting Sheet Workflow Operations UI Rules 
+    window.triggerBetPopup = function(selectionParameter) {
+        const timingSecurityCheck = new Date().getSeconds() % 30;
+        if(timingSecurityCheck >= 25) {
+            alert("Betting suspended for this round! Wait for execution frames reset.");
+            return;
+        }
+
+        activeSelection = selectionParameter;
+        document.getElementById('popupSelectedSelectionText').innerText = activeSelection;
+        document.getElementById('bettingModalSheet').style.display = "flex";
+    }
+
+    window.dismissBetModal = function() {
+        document.getElementById('bettingModalSheet').style.display = "none";
+    }
+
+    window.adjustStakePreset = function(valueAmount) {
+        document.getElementById('userBettingInputAmount').value = valueAmount;
+    }
+
+    window.commitBetToDatabase = async function() {
+        const betValueStake = parseInt(document.getElementById('userBettingInputAmount').value);
+        
+        if(isNaN(betValueStake) || betValueStake < 10) {
+            alert("Minimum required bet allocation value is ₹10.");
+            return;
+        }
+        if(betValueStake > walletFunds) {
+            alert("Insufficient available balance inside wallet ledger.");
+            return;
+        }
+
+        try {
+            // Deduct funds safely inside a security atomic transaction frame block
+            const userWalletRef = ref(database, `users/${activeUser.uid}/walletBalance`);
+            let transactionSuccess = false;
+            
+            await runTransaction(userWalletRef, (currentBalance) => {
+                let bal = parseFloat(currentBalance || 0);
+                if (bal >= betValueStake) {
+                    transactionSuccess = true;
+                    return bal - betValueStake;
+                } else {
+                    return; 
+                }
+            });
+
+            if(!transactionSuccess) {
+                alert("Transaction aborted due to real-time wallet verification failure.");
+                return;
+            }
+
+            await set(ref(database, `bets/${activeUser.uid}_${currentGlobalPeriodId}`), {
+                betId: `${activeUser.uid}_${currentGlobalPeriodId}`,
+                uid: activeUser.uid,
+                period: currentGlobalPeriodId,
+                selection: activeSelection,
+                amount: betValueStake,
+                status: "Pending",
+                payout: 0,
+                timestamp: new Date().toISOString()
+            });
+
+            dismissBetModal();
+            alert(`Bet recorded successfully on [ ${activeSelection} ] for ₹${betValueStake}!`);
+        } catch(error) {
+            alert("Transaction failure: " + error.message);
+        }
+    }
+
+    window.goBack = function() {
+        if(window.history.length > 1) {
+            window.history.back();
+        } else {
+            window.location.href = "profile.html";
+        }
+    }
+</script>
+</body>
+</html>

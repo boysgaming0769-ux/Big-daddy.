@@ -1,0 +1,157 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Big Daddy - My Profile</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background-color: #090b0e; color: #f3f4f6; font-family: 'Segoe UI', sans-serif; }
+        .gold-gradient { background: linear-gradient(135deg, #ffe259 0%, #ffa751 100%); }
+        .gold-text { background: linear-gradient(135deg, #ffe259 0%, #ffa751 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .card-dark { background: linear-gradient(145deg, #151a22, #1b222c); border: 1px solid rgba(255, 167, 81, 0.1); }
+    </style>
+</head>
+<body class="pb-24 max-w-md mx-auto shadow-2xl relative min-h-screen">
+
+    <header class="bg-[#11161e] p-6 rounded-b-3xl border-b border-gray-800 text-center space-y-3">
+        <div class="w-20 h-20 rounded-full border-4 border-yellow-500/40 p-1 mx-auto relative bg-[#090b0e] overflow-hidden">
+            <img id="profileUserAvatar" src="https://via.placeholder.com/150?text=User" alt="User Profile" class="w-full h-full rounded-full object-cover">
+        </div>
+        <div>
+            <h2 class="text-xl font-black text-white tracking-wide" id="profileUserName">Loading Account...</h2>
+            <p class="text-[11px] font-mono text-gray-400 mt-0.5" id="profileUserEmail">checking_session@gmail.com</p>
+        </div>
+        
+        <span class="inline-flex items-center bg-yellow-500/10 border border-yellow-500/20 text-yellow-400 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+            <i class="fa-solid fa-gem mr-1"></i> VIP Level 1 Member
+        </span>
+    </header>
+
+    <main class="p-4 space-y-4">
+        
+        <div class="card-dark rounded-2xl p-5 flex justify-between items-center relative overflow-hidden shadow-xl">
+            <div>
+                <p class="text-xs text-gray-400 font-semibold tracking-wider uppercase">Available Wallet Balance</p>
+                <h3 class="text-3xl font-black mt-1 text-white">₹<span id="profileWalletBalance">0.00</span></h3>
+            </div>
+            <div class="flex space-x-2">
+                <a href="recharge.html" class="gold-gradient text-black text-xs font-extrabold px-3.5 py-2 rounded-xl active:scale-95 transition-transform flex items-center shadow-md">
+                    <i class="fa-solid fa-plus-circle mr-1"></i> Deposit
+                </a>
+                <a href="withdraw.html" class="bg-gray-800 text-gray-300 text-xs font-bold px-3.5 py-2 rounded-xl active:scale-95 transition-transform flex items-center border border-gray-700">
+                    <i class="fa-solid fa-money-bill-wave mr-1"></i> Withdraw
+                </a>
+            </div>
+        </div>
+
+        <div class="card-dark rounded-2xl divide-y divide-gray-800/60 overflow-hidden shadow-lg">
+            
+            <a href="promotion.html" class="p-4 flex justify-between items-center hover:bg-gray-800/20 transition-colors">
+                <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 rounded-lg bg-orange-500/10 flex items-center justify-center"><i class="fa-solid fa-share-nodes text-orange-400"></i></div>
+                    <span class="text-sm font-semibold text-gray-200">Agency Promotion (Invite)</span>
+                </div>
+                <i class="fa-solid fa-chevron-right text-gray-600 text-xs"></i>
+            </a>
+
+            <a href="#" id="supportLinkButton" target="_blank" class="p-4 flex justify-between items-center hover:bg-gray-800/20 transition-colors">
+                <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 rounded-lg bg-green-500/10 flex items-center justify-center"><i class="fa-solid fa-headset text-green-400"></i></div>
+                    <span class="text-sm font-semibold text-gray-200">24/7 Live Support Chat</span>
+                </div>
+                <i class="fa-solid fa-chevron-right text-gray-600 text-xs"></i>
+            </a>
+
+            <div class="p-4 flex justify-between items-center hover:bg-gray-800/20 transition-colors">
+                <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center"><i class="fa-solid fa-shield-halved text-blue-400"></i></div>
+                    <span class="text-sm font-semibold text-gray-200">Security & Privacy Rules</span>
+                </div>
+                <span class="text-[10px] bg-blue-500/10 text-blue-400 font-bold px-2 py-0.5 rounded-full">Encrypted</span>
+            </div>
+
+        </div>
+
+        <button id="logoutBtn" class="w-full bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 text-red-400 font-bold py-3.5 rounded-xl transition-all active:scale-[0.99] uppercase text-xs tracking-wider cursor-pointer">
+            <i class="fa-solid fa-power-off mr-1.5"></i> Log Out Account Session
+        </button>
+    </main>
+
+    <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-[#11161e] border-t border-gray-800 grid grid-cols-5 py-2 text-center z-50">
+        <a href="index.html" class="text-gray-400 flex flex-col items-center justify-center"><i class="fa-solid fa-house text-lg"></i><span class="text-[10px] mt-1">Home</span></a>
+        <a href="promotion.html" class="text-gray-400 flex flex-col items-center justify-center"><i class="fa-solid fa-share-nodes text-lg"></i><span class="text-[10px] mt-1">Invite</span></a>
+        <a href="game.html" class="text-gray-400 flex flex-col items-center justify-center relative -top-4">
+            <div class="w-12 h-12 gold-gradient rounded-full flex items-center justify-center text-black border-4 border-[#090b0e]"><i class="fa-solid fa-gamepad text-xl"></i></div>
+            <span class="text-[10px] mt-0.5 font-bold text-yellow-500">Bet</span>
+        </a>
+        <a href="recharge.html" class="text-gray-400 flex flex-col items-center justify-center"><i class="fa-solid fa-wallet text-lg"></i><span class="text-[10px] mt-1">Wallet</span></a>
+        <a href="profile.html" class="text-yellow-500 flex flex-col items-center justify-center"><i class="fa-solid fa-user text-lg"></i><span class="text-[10px] mt-1">Mine</span></a>
+    </nav>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        // Updated Production Firebase Credentials (big-daddy-7422f)
+        const firebaseConfig = {
+          apiKey: "AIzaSyBjB5uOFrL8OfuqAHWlyB5_p_say0KrFuY",
+          authDomain: "big-daddy-7422f.firebaseapp.com",
+          databaseURL: "https://big-daddy-7422f-default-rtdb.firebaseio.com",
+          projectId: "big-daddy-7422f",
+          storageBucket: "big-daddy-7422f.firebasestorage.app",
+          messagingSenderId: "528194459346",
+          appId: "1:528194459346:web:458044786db1c36281ff0b",
+          measurementId: "G-ZY2D9HT28C"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const database = getDatabase(app);
+
+        // 1. Hook Live Session State & Map UI Profiles
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // Render Google standard profile identity data points
+                document.getElementById('profileUserName').innerText = user.displayName || "Big Daddy Player";
+                document.getElementById('profileUserEmail').innerText = user.email || "No Email Provided";
+                if(user.photoURL) document.getElementById('profileUserAvatar').src = user.photoURL;
+
+                // Sync live balance records from realtime tree node
+                onValue(ref(database, 'users/' + user.uid), (snapshot) => {
+                    const data = snapshot.val();
+                    if(data) {
+                        document.getElementById('profileWalletBalance').innerText = parseFloat(data.walletBalance || 0).toFixed(2);
+                    }
+                });
+            } else {
+                window.location.href = "login.html";
+            }
+        });
+
+        // 2. Dynamic Support Link from Admin Panel Settings
+        onValue(ref(database, 'admin_settings/support_url'), (snapshot) => {
+            if(snapshot.exists()) {
+                document.getElementById('supportLinkButton').href = snapshot.val();
+            } else {
+                // Fallback Telegram Link if not specified by admin
+                document.getElementById('supportLinkButton').href = "https://telegram.me/your_support_handle";
+            }
+        });
+
+        // 3. User Signout Trigger
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            if(confirm("Are you sure you want to log out of your session?")) {
+                signOut(auth).then(() => {
+                    window.location.href = "login.html";
+                }).catch((error) => {
+                    alert("Error signing out: " + error.message);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
