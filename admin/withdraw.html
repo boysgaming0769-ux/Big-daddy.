@@ -1,0 +1,160 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Big Daddy Admin - Approve Withdrawals</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background-color: #0b0f17; color: #f3f4f6; font-family: 'Segoe UI', sans-serif; }
+        .admin-card { background: linear-gradient(145deg, #1e293b, #0f172a); border: 1px solid rgba(255, 255, 255, 0.05); }
+    </style>
+</head>
+<body class="pb-24 max-w-md mx-auto shadow-2xl relative min-h-screen bg-[#070a10]">
+
+    <header class="bg-[#0f172a] border-b border-slate-800 p-4 sticky top-0 z-50 flex items-center justify-between shadow-xl">
+        <div class="flex items-center">
+            <a href="game.html" class="text-slate-400 hover:text-white mr-4 text-xl">
+                <i class="fa-solid fa-chevron-left"></i>
+            </a>
+            <h1 class="text-lg font-black tracking-wider uppercase text-white">Withdraw Ledger</h1>
+        </div>
+        <span class="text-[10px] bg-amber-500/10 text-amber-400 font-bold border border-amber-500/20 px-2.5 py-1 rounded-md uppercase">Requests Flow</span>
+    </header>
+
+    <main class="p-4 space-y-4" id="adminWithdrawRequestsFeedBox">
+        <div class="text-center py-12 text-slate-500 text-xs italic" id="adminWithdrawLoader">
+            <i class="fa-solid fa-spinner animate-spin mr-2 text-amber-500"></i> Fetching active bank payout ledgers...
+        </div>
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, onValue, update, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        // Updated Production Firebase Setup Credentials Configuration (big-daddy-7422f)
+        const firebaseConfig = {
+          apiKey: "AIzaSyBjB5uOFrL8OfuqAHWlyB5_p_say0KrFuY",
+          authDomain: "big-daddy-7422f.firebaseapp.com",
+          databaseURL: "https://big-daddy-7422f-default-rtdb.firebaseio.com",
+          projectId: "big-daddy-7422f",
+          storageBucket: "big-daddy-7422f.firebasestorage.app",
+          messagingSenderId: "528194459346",
+          appId: "1:528194459346:web:458044786db1c36281ff0b",
+          measurementId: "G-ZY2D9HT28C"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+
+        // 1. Continuous Live Stream Sync For Active Users Withdrawal Ledger Tree Nodes
+        const streamPointerRef = ref(database, 'withdraw_requests');
+        onValue(streamPointerRef, (snapshot) => {
+            const feedContainer = document.getElementById('adminWithdrawRequestsFeedBox');
+            feedContainer.innerHTML = "";
+
+            if(!snapshot.exists()) {
+                feedContainer.innerHTML = `
+                    <div class="text-center py-24 text-slate-600">
+                        <i class="fa-solid fa-circle-check text-4xl mb-2 text-slate-800"></i>
+                        <p class="text-xs">No user withdrawal request records found in pipeline.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const masterData = snapshot.val();
+            // Sorting elements to view pending tokens sequence at the very top
+            const entriesList = Object.values(masterData).sort((a,b) => b.timestamp.localeCompare(a.timestamp));
+
+            entriesList.forEach((req) => {
+                let statusBadgeHtml = "";
+                let operationalButtonsHtml = "";
+
+                if(req.status === "Pending") {
+                    statusBadgeHtml = `<span class="text-[9px] font-bold px-2 py-0.5 rounded-full bg-yellow-500/10 text-yellow-500 border border-yellow-500/20 uppercase animate-pulse">Pending</span>`;
+                    operationalButtonsHtml = `
+                        <div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-800/60 mt-2">
+                            <button onclick="handleWithdrawPayoutAction('${req.withdrawId}', 'APPROVE', '${req.uid}', '${req.amount}')" class="bg-emerald-600 hover:bg-emerald-500 text-black font-black text-[10px] uppercase py-2 rounded-lg transition-transform active:scale-95 cursor-pointer">
+                                <i class="fa-solid fa-check mr-1"></i> Approve
+                            </button>
+                            <button onclick="handleWithdrawPayoutAction('${req.withdrawId}', 'REJECT', '${req.uid}', '${req.amount}')" class="bg-red-600/20 hover:bg-red-600/40 text-red-400 border border-red-500/20 font-bold text-[10px] uppercase py-2 rounded-lg transition-transform active:scale-95 cursor-pointer">
+                                <i class="fa-solid fa-xmark mr-1"></i> Reject & Refund
+                            </button>
+                        </div>
+                    `;
+                } else if(req.status === "Success") {
+                    statusBadgeHtml = `<span class="text-[9px] font-bold px-2 py-0.5 rounded-full bg-green-500/10 text-green-400 border border-green-500/20 uppercase"><i class="fa-solid fa-circle-check mr-0.5"></i> Paid Out</span>`;
+                } else {
+                    statusBadgeHtml = `<span class="text-[9px] font-bold px-2 py-0.5 rounded-full bg-red-500/10 text-red-400 border border-red-500/20 uppercase">Rejected</span>`;
+                }
+
+                feedContainer.innerHTML += `
+                    <div class="admin-card rounded-xl p-4 space-y-2.5 shadow-md">
+                        <div class="flex justify-between items-center border-b border-slate-800/40 pb-2">
+                            <div>
+                                <p class="text-[9px] text-slate-500 font-bold uppercase tracking-wider font-mono">REQ ID: ${req.withdrawId}</p>
+                                <p class="text-xs text-slate-400 mt-0.5 font-medium">${req.userEmail || 'Google User'}</p>
+                            </div>
+                            <div>
+                                ${statusBadgeHtml}
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-950/40 border border-slate-800/40 rounded-lg p-2.5 space-y-1 text-xs">
+                            <div class="flex justify-between"><span class="text-slate-500">Holder Name:</span> <span class="font-bold text-white">${req.bankDetails?.holderName || 'N/A'}</span></div>
+                            <div class="flex justify-between"><span class="text-slate-500">A/C Number:</span> <span class="font-mono font-bold text-yellow-500 tracking-wider">${req.bankDetails?.accountNumber || 'N/A'}</span></div>
+                            <div class="flex justify-between"><span class="text-slate-500">IFSC Code:</span> <span class="font-mono text-slate-300 uppercase">${req.bankDetails?.ifscCode || 'N/A'}</span></div>
+                            <div class="flex justify-between"><span class="text-slate-500">Bank Type:</span> <span class="text-slate-400 font-medium">${req.bankDetails?.bankName || 'N/A'}</span></div>
+                        </div>
+
+                        <div class="flex justify-between items-center py-1">
+                            <span class="text-[10px] uppercase font-bold tracking-wide text-slate-400">Payout Value</span>
+                            <span class="text-sm font-mono font-black text-emerald-400">₹${parseFloat(req.amount || 0).toFixed(2)}</span>
+                        </div>
+
+                        ${operationalButtonsHtml}
+                    </div>
+                `;
+            });
+        });
+
+        // 2. Settlement Execution Router Matrix Trigger Functions Block
+        window.handleWithdrawPayoutAction = async function(reqId, decision, userUid, amount) {
+            const warningPrompt = `Are you absolutely sure you want to perform operational action [ ${decision} ] on request ID: ${reqId}?`;
+            if(!confirm(warningPrompt)) return;
+
+            if (decision === 'APPROVE') {
+                // Update specific status flag index directly inside target path structure
+                await update(ref(database, 'withdraw_requests/' + reqId), {
+                    status: 'Success'
+                });
+                alert("Withdrawal request processed as Success! Ledger record locked.");
+            } else if (decision === 'REJECT') {
+                // Anti-Loss Protection Layer: Safe reverse-refund to user wallet balance if request fails validation
+                const userProfileSnapshot = await get(ref(database, 'users/' + userUid));
+                if(userProfileSnapshot.exists()) {
+                    const currentBalanceInDb = parseFloat(userProfileSnapshot.val().walletBalance || 0);
+                    const refundedBalanceValue = currentBalanceInDb + parseFloat(amount);
+
+                    // Credit back balance points safely inside user structural metrics nodes
+                    await update(ref(database, 'users/' + userUid), {
+                        walletBalance: refundedBalanceValue
+                    });
+
+                    // Terminate request tracking block state to Rejected status
+                    await update(ref(database, 'withdraw_requests/' + reqId), {
+                        status: 'Rejected'
+                    });
+
+                    alert("Request rejected! Funds successfully returned back to user's live balance wallet.");
+                } else {
+                    alert("Fatal Collision Error: Could not parse or locate user account profile structure for automated refund loops.");
+                }
+            }
+        }
+    </script>
+</body>
+</html>

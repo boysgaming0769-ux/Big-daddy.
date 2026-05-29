@@ -1,0 +1,160 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Big Daddy Admin - Approve Recharges</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background-color: #0b0f17; color: #f3f4f6; font-family: 'Segoe UI', sans-serif; }
+        .admin-card { background: linear-gradient(145deg, #1e293b, #0f172a); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .gold-text { background: linear-gradient(135deg, #ffe259 0%, #ffa751 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    </style>
+</head>
+<body class="pb-24 max-w-md mx-auto shadow-2xl relative min-h-screen bg-[#070a10]">
+
+    <header class="bg-[#0f172a] border-b border-slate-800 p-4 sticky top-0 z-50 flex items-center justify-between shadow-xl">
+        <div class="flex items-center">
+            <a href="dashboard.html" class="text-slate-400 hover:text-white mr-4 text-xl">
+                <i class="fa-solid fa-chevron-left"></i>
+            </a>
+            <h1 class="text-lg font-black tracking-wider uppercase text-white">Deposit Ledger</h1>
+        </div>
+        <span class="text-[10px] bg-emerald-500/10 text-emerald-400 font-bold border border-emerald-500/20 px-2.5 py-1 rounded-md uppercase">UTR Verification</span>
+    </header>
+
+    <main class="p-4 space-y-4" id="adminRechargeRequestsBoxFeed">
+        <div class="text-center py-12 text-slate-500 text-xs italic" id="adminRechargeComponentLoader">
+            <i class="fa-solid fa-spinner animate-spin mr-2 text-emerald-500"></i> Scanning ledger synchronization nodes...
+        </div>
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, onValue, update, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        // Updated Production Firebase Setup Credentials Configuration (big-daddy-7422f)
+        const firebaseConfig = {
+          apiKey: "AIzaSyBjB5uOFrL8OfuqAHWlyB5_p_say0KrFuY",
+          authDomain: "big-daddy-7422f.firebaseapp.com",
+          databaseURL: "https://big-daddy-7422f-default-rtdb.firebaseio.com",
+          projectId: "big-daddy-7422f",
+          storageBucket: "big-daddy-7422f.firebasestorage.app",
+          messagingSenderId: "528194459346",
+          appId: "1:528194459346:web:458044786db1c36281ff0b",
+          measurementId: "G-ZY2D9HT28C"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+
+        // 1. Continuous Live Stream Synchronization Loop For Deposit Inbound Logs
+        const liveRechargesPointerRef = ref(database, 'recharge_requests');
+        onValue(liveRechargesPointerRef, (snapshot) => {
+            const feedBox = document.getElementById('adminRechargeRequestsBoxFeed');
+            feedBox.innerHTML = "";
+
+            if(!snapshot.exists()) {
+                feedBox.innerHTML = `
+                    <div class="text-center py-24 text-slate-600">
+                        <i class="fa-solid fa-receipt text-4xl mb-2 text-slate-800"></i>
+                        <p class="text-xs">No pending or historical recharge receipts found in queue.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const masterPayload = snapshot.val();
+            // Sort to position pending critical UTR tokens sequence on the absolute top
+            const sortedArrayData = Object.values(masterPayload).sort((a,b) => b.timestamp.localeCompare(a.timestamp));
+
+            sortedArrayData.forEach((req) => {
+                let statusBadgeLayoutHtml = "";
+                let adminActionButtonsLayoutHtml = "";
+
+                if(req.status === "Pending") {
+                    statusBadgeLayoutHtml = `<span class="text-[9px] font-bold px-2 py-0.5 rounded-full bg-yellow-500/10 text-yellow-500 border border-yellow-500/20 uppercase animate-pulse">Verification Needed</span>`;
+                    adminActionButtonsLayoutHtml = `
+                        <div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-800/60 mt-2">
+                            <button onclick="executeDepositTicketSettlement('${req.requestId}', 'APPROVE', '${req.uid}', '${req.amount}')" class="bg-emerald-600 hover:bg-emerald-500 text-black font-black text-[10px] uppercase py-2 rounded-lg transition-all active:scale-95 cursor-pointer">
+                                <i class="fa-solid fa-circle-check mr-1"></i> Approve & Credit
+                            </button>
+                            <button onclick="executeDepositTicketSettlement('${req.requestId}', 'REJECT', '${req.uid}', '${req.amount}')" class="bg-red-600/20 hover:bg-red-600/40 text-red-400 border border-red-500/20 font-bold text-[10px] uppercase py-2 rounded-lg transition-all active:scale-95 cursor-pointer">
+                                <i class="fa-solid fa-trash-can mr-1"></i> Reject Slips
+                            </button>
+                        </div>
+                    `;
+                } else if(req.status === "Success") {
+                    statusBadgeLayoutHtml = `<span class="text-[9px] font-bold px-2 py-0.5 rounded-full bg-green-500/10 text-green-400 border border-green-500/20 uppercase">Approved</span>`;
+                } else {
+                    statusBadgeLayoutHtml = `<span class="text-[9px] font-bold px-2 py-0.5 rounded-full bg-red-500/10 text-red-400 border border-red-500/20 uppercase">Rejected</span>`;
+                }
+
+                feedBox.innerHTML += `
+                    <div class="admin-card rounded-xl p-4 space-y-2.5 shadow-md">
+                        <div class="flex justify-between items-center border-b border-slate-800/40 pb-2">
+                            <div>
+                                <p class="text-[9px] text-slate-500 font-bold uppercase tracking-wider font-mono">ID: ${req.requestId}</p>
+                                <p class="text-xs text-slate-400 mt-0.5 font-medium">${req.userEmail || 'Google User'}</p>
+                            </div>
+                            <div>
+                                ${statusBadgeLayoutHtml}
+                            </div>
+                        </div>
+
+                        <div class="flex justify-between items-center bg-slate-950/50 border border-slate-800/40 p-2.5 rounded-xl">
+                            <div>
+                                <p class="text-[9px] uppercase font-bold text-slate-500 tracking-wide">12-Digit UTR Number</p>
+                                <p class="text-sm font-mono font-black text-yellow-500 tracking-wider mt-0.5 select-all" title="Click to Select UTR">${req.utrNumber || 'N/A'}</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-[9px] uppercase font-bold text-slate-500 tracking-wide">Amount Value</p>
+                                <p class="text-sm font-mono font-black text-emerald-400 mt-0.5">₹${parseFloat(req.amount || 0).toFixed(2)}</p>
+                            </div>
+                        </div>
+
+                        ${adminActionButtonsLayoutHtml}
+                    </div>
+                `;
+            });
+        });
+
+        // 2. Settlement Verification Handshake Trigger Controller Functions Block
+        window.executeDepositTicketSettlement = async function(reqId, decision, userUid, amount) {
+            const verificationPromptMessage = `Confirm authorization loop execution [ ${decision} ] for Deposit Request ID: ${reqId}?`;
+            if(!confirm(verificationPromptMessage)) return;
+
+            if (decision === 'APPROVE') {
+                // Step A: Parse current operational account metrics state from target player profile
+                const userSnapshot = await get(ref(database, 'users/' + userUid));
+                if(userSnapshot.exists()) {
+                    const currentBalance = parseFloat(userSnapshot.val().walletBalance || 0);
+                    const calculatedNewBalance = currentBalance + parseFloat(amount);
+
+                    // Step B: Atomic update to credit target user balance
+                    await update(ref(database, 'users/' + userUid), {
+                        walletBalance: calculatedNewBalance
+                    });
+
+                    // Step C: Update status inside logs tree reference
+                    await update(ref(database, 'recharge_requests/' + reqId), {
+                        status: 'Success'
+                    });
+
+                    alert("Transaction verified! Balance loaded to player wallet matrix successfully.");
+                } else {
+                    alert("Fatal Node Error: Target player profile record structure was not found inside database index mappings.");
+                }
+            } else if (decision === 'REJECT') {
+                // Simply mark status index as Rejected
+                await update(ref(database, 'recharge_requests/' + reqId), {
+                    status: 'Rejected'
+                });
+                alert("Deposit slip flagged as Rejected successfully.");
+            }
+        }
+    </script>
+</body>
+</html>

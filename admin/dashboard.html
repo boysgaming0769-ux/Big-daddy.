@@ -1,0 +1,186 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Big Daddy Admin - Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background-color: #0b0f17; color: #f3f4f6; font-family: 'Segoe UI', sans-serif; }
+        .admin-card { background: linear-gradient(145deg, #1e293b, #0f172a); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .gold-text { background: linear-gradient(135deg, #ffe259 0%, #ffa751 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .gold-gradient { background: linear-gradient(135deg, #ffe259 0%, #ffa751 100%); }
+    </style>
+</head>
+<body class="pb-24 max-w-md mx-auto shadow-2xl relative min-h-screen bg-[#070a10]">
+
+    <header class="bg-[#0f172a] border-b border-slate-800 p-4 sticky top-0 z-50 flex items-center justify-between shadow-xl">
+        <div class="flex items-center space-x-2">
+            <i class="fa-solid fa-gauge-high text-yellow-500 text-xl"></i>
+            <h1 class="text-lg font-black tracking-wider uppercase text-white">Admin Hub</h1>
+        </div>
+        <button onclick="handleAdminLogout()" class="text-xs bg-red-500/10 text-red-400 border border-red-500/20 px-3 py-1.5 rounded-lg font-bold uppercase transition-transform active:scale-95 cursor-pointer">
+            <i class="fa-solid fa-power-off mr-1"></i> Logout
+        </button>
+    </header>
+
+    <main class="p-4 space-y-4">
+        
+        <div class="admin-card rounded-2xl p-5 shadow-lg relative overflow-hidden">
+            <div class="absolute right-0 bottom-0 opacity-5 translate-x-4 translate-y-4 text-9xl">
+                <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Security Authorization</p>
+            <h2 class="text-2xl font-black mt-1 gold-text">Welcome Back, Admin</h2>
+            <p class="text-[11px] text-slate-500 mt-1">Real-time gaming operations and balance sheet settlement controller console nodes.</p>
+        </div>
+
+        <div class="grid grid-cols-3 gap-3">
+            <div class="admin-card p-3 rounded-xl text-center border border-slate-800/60 shadow-md">
+                <div class="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center mx-auto mb-2 border border-blue-500/20">
+                    <i class="fa-solid fa-users text-sm"></i>
+                </div>
+                <p class="text-[9px] uppercase font-bold text-slate-500 tracking-wider">Total Users</p>
+                <p class="text-lg font-black text-white mt-0.5 font-mono" id="countTotalUsers">0</p>
+            </div>
+            
+            <div class="admin-card p-3 rounded-xl text-center border border-slate-800/60 shadow-md">
+                <div class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center mx-auto mb-2 border border-emerald-500/20">
+                    <i class="fa-solid fa-wallet text-sm"></i>
+                </div>
+                <p class="text-[9px] uppercase font-bold text-slate-500 tracking-wider">Pending Dep.</p>
+                <p class="text-lg font-black text-emerald-400 mt-0.5 font-mono" id="countPendingRecharges">0</p>
+            </div>
+
+            <div class="admin-card p-3 rounded-xl text-center border border-slate-800/60 shadow-md">
+                <div class="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center mx-auto mb-2 border border-amber-500/20">
+                    <i class="fa-solid fa-money-check-dollar text-sm"></i>
+                </div>
+                <p class="text-[9px] uppercase font-bold text-slate-500 tracking-wider">Pending With.</p>
+                <p class="text-lg font-black text-amber-500 mt-0.5 font-mono" id="countPendingWithdrawals">0</p>
+            </div>
+        </div>
+
+        <div class="space-y-2.5 pt-2">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 pl-1"><i class="fa-solid fa-toolbox text-yellow-500 mr-1.5"></i> Execution Gateways</h3>
+            
+            <a href="game.html" class="admin-card flex items-center justify-between p-4 rounded-xl hover:bg-slate-800/40 transition-all border border-slate-800/50 group block">
+                <div class="flex items-center space-x-3.5">
+                    <div class="w-10 h-10 rounded-xl bg-yellow-500/10 border border-yellow-500/20 text-yellow-500 flex items-center justify-center text-base shadow-sm">
+                        <i class="fa-solid fa-gamepad"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-bold text-white group-hover:text-yellow-400 transition-colors">Game Result Injection Engine</h4>
+                        <p class="text-[10px] text-slate-500 mt-0.5">Inject numbers, choices or setup 10 round sequence flow loops.</p>
+                    </div>
+                </div>
+                <i class="fa-solid fa-chevron-right text-xs text-slate-600 group-hover:text-white transition-colors"></i>
+            </a>
+
+            <a href="withdraw.html" class="admin-card flex items-center justify-between p-4 rounded-xl hover:bg-slate-800/40 transition-all border border-slate-800/50 group block">
+                <div class="flex items-center space-x-3.5">
+                    <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center text-base shadow-sm">
+                        <i class="fa-solid fa-money-bill-transfer"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-bold text-white group-hover:text-amber-400 transition-colors">Withdrawal Settlements Ledger</h4>
+                        <p class="text-[10px] text-slate-500 mt-0.5">Verify bank details, confirm payouts or reject/refund tokens.</p>
+                    </div>
+                </div>
+                <i class="fa-solid fa-chevron-right text-xs text-slate-600 group-hover:text-white transition-colors"></i>
+            </a>
+
+            <a href="recharge.html" class="admin-card flex items-center justify-between p-4 rounded-xl hover:bg-slate-800/40 transition-all border border-slate-800/50 group block">
+                <div class="flex items-center space-x-3.5">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center text-base shadow-sm">
+                        <i class="fa-solid fa-receipt"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-bold text-white group-hover:text-emerald-400 transition-colors">Manual Deposits Verification</h4>
+                        <p class="text-[10px] text-slate-500 mt-0.5">Cross check 12-digit transaction UTR codes to credit balance.</p>
+                    </div>
+                </div>
+                <i class="fa-solid fa-chevron-right text-xs text-slate-600 group-hover:text-white transition-colors"></i>
+            </a>
+        </div>
+
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getDatabase, ref, onValue, query, orderByChild, equalTo } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        // Updated Production Firebase Setup Credentials Configuration (big-daddy-7422f)
+        const firebaseConfig = {
+          apiKey: "AIzaSyBjB5uOFrL8OfuqAHWlyB5_p_say0KrFuY",
+          authDomain: "big-daddy-7422f.firebaseapp.com",
+          databaseURL: "https://big-daddy-7422f-default-rtdb.firebaseio.com",
+          projectId: "big-daddy-7422f",
+          storageBucket: "big-daddy-7422f.firebasestorage.app",
+          messagingSenderId: "528194459346",
+          appId: "1:528194459346:web:458044786db1c36281ff0b",
+          measurementId: "G-ZY2D9HT28C"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const database = getDatabase(app);
+
+        // 1. Session Gatekeeper Watcher Loop
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                initializeRealtimeMetricsSummaryStream();
+            } else {
+                window.location.href = "login.html";
+            }
+        });
+
+        // 2. Real-time Live Counters Streaming Listeners Block 
+        function initializeRealtimeMetricsSummaryStream() {
+            
+            // A. Count Total Registered Profiles Inside User Data Tree
+            onValue(ref(database, 'users'), (snapshot) => {
+                if(snapshot.exists()) {
+                    document.getElementById('countTotalUsers').innerText = Object.keys(snapshot.val()).length;
+                } else {
+                    document.getElementById('countTotalUsers').innerText = "0";
+                }
+            });
+
+            // B. Filter & Realtime Listen for Pending Recharge Tickets Sequence Flow Node
+            const rechargeQueryRef = query(ref(database, 'recharge_requests'), orderByChild('status'), equalTo('Pending'));
+            onValue(rechargeQueryRef, (snapshot) => {
+                if(snapshot.exists()) {
+                    document.getElementById('countPendingRecharges').innerText = Object.keys(snapshot.val()).length;
+                } else {
+                    document.getElementById('countPendingRecharges').innerText = "0";
+                }
+            });
+
+            // C. Filter & Realtime Listen for Pending Withdrawal Ledger Request Flow Node
+            const withdrawQueryRef = query(ref(database, 'withdraw_requests'), orderByChild('status'), equalTo('Pending'));
+            onValue(withdrawQueryRef, (snapshot) => {
+                if(snapshot.exists()) {
+                    document.getElementById('countPendingWithdrawals').innerText = Object.keys(snapshot.val()).length;
+                } else {
+                    document.getElementById('countPendingWithdrawals').innerText = "0";
+                }
+            });
+        }
+
+        // 3. Admin Logout Workflow Operations Hook Method
+        window.handleAdminLogout = function() {
+            if(confirm("Do you want to log out from Secure Admin Dashboard?")) {
+                signOut(auth).then(() => {
+                    window.location.href = "login.html";
+                }).catch(err => {
+                    alert("Logout failed: " + err.message);
+                });
+            }
+        }
+    </script>
+</body>
+</html>
