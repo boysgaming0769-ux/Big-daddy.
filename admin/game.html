@@ -1,1 +1,442 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Big Daddy Admin - Advanced Control Panel</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background-color: #0b0f17; color: #f3f4f6; font-family: 'Segoe UI', sans-serif; }
+        .admin-card { background: linear-gradient(145deg, #1e293b, #0f172a); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .gold-gradient { background: linear-gradient(135deg, #ffe259 0%, #ffa751 100%); }
+    </style>
+</head>
+<body class="pb-24 max-w-md mx-auto shadow-2xl relative min-h-screen bg-[#070a10]">
+
+    <header class="bg-[#0f172a] border-b border-slate-800 p-4 sticky top-0 z-50 flex items-center justify-between shadow-xl">
+        <div class="flex items-center space-x-2">
+            <div class="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+            <h1 class="text-lg font-black tracking-wider uppercase text-white">Central Console</h1>
+        </div>
+        <span class="text-[10px] bg-red-500/10 text-red-400 font-bold border border-red-500/20 px-2.5 py-1 rounded-md uppercase">Root Admin</span>
+    </header>
+
+    <main class="p-4 space-y-5">
+        
+        <div class="admin-card rounded-2xl p-4 space-y-3 shadow-md">
+            <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center"><i class="fa-solid fa-server mr-2 text-yellow-500"></i> Server Live Metrices</h2>
+            <div class="grid grid-cols-2 gap-3 text-sm">
+                <div class="bg-slate-900/50 p-3 rounded-xl border border-slate-800">
+                    <p class="text-[10px] uppercase text-slate-500 font-bold">Active Round Period</p>
+                    <p class="text-base font-mono font-black text-white mt-1" id="adminCurrentPeriodDisplay">Syncing...</p>
+                </div>
+                <div class="bg-slate-900/50 p-3 rounded-xl border border-slate-800">
+                    <p class="text-[10px] uppercase text-slate-500 font-bold">Time Left Clock</p>
+                    <p class="text-base font-mono font-black text-yellow-500 mt-1" id="adminCountdownClock">00:30</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="admin-card rounded-2xl p-4 space-y-3 shadow-md border-l-4 border-yellow-500">
+            <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center">
+                <i class="fa-solid fa-toggle-on mr-2 text-yellow-500"></i> Game Operational Mode
+            </h2>
+            <p class="text-[11px] text-slate-400">
+                Choose between fully automated algorithmic system or manual admin control prediction injector mode.
+            </p>
+            <div class="grid grid-cols-2 gap-3 pt-1">
+                <button id="modeAutoBtn" onclick="toggleSystemMode('AUTO')" class="w-full py-2.5 rounded-xl font-bold text-xs uppercase transition-all bg-slate-800 text-slate-400 border border-slate-700 active:scale-95 cursor-pointer">
+                    <i class="fa-solid fa-robot mr-1"></i> Auto Mode
+                </button>
+                <button id="modeManualBtn" onclick="toggleSystemMode('MANUAL')" class="w-full py-2.5 rounded-xl font-bold text-xs uppercase transition-all bg-slate-800 text-slate-400 border border-slate-700 active:scale-95 cursor-pointer">
+                    <i class="fa-solid fa-user-gear mr-1"></i> Manual Predict
+                </button>
+            </div>
+            <div class="text-[10px] font-mono text-center p-2 rounded bg-slate-950 text-slate-400" id="currentSystemModeStatus">
+                Current Status: Fetching state...
+            </div>
+        </div>
+
+        <div id="manualPredictSection" class="admin-card rounded-2xl p-4 space-y-3 shadow-md border-l-4 border-purple-500" style="display: none;">
+            <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center">
+                <i class="fa-solid fa-wand-magic-sparkles mr-2 text-purple-400"></i> Next Round Result Injector
+            </h2>
+            <p class="text-[11px] text-slate-400">Agli chalne wali period ID ke liye manual prediction fix karein. Number choose karte hi color aur details lock ho jayengi.</p>
+            
+            <div>
+                <label class="block text-[10px] uppercase text-slate-400 font-bold mb-1.5">Select Number (0-9)</label>
+                <div class="grid grid-cols-5 gap-2">
+                    <button onclick="selectManualNum(0, 'Violet')" class="bg-slate-950 hover:bg-purple-900 border border-slate-800 p-2.5 rounded-lg text-sm font-bold text-purple-400 num-select-btn">0</button>
+                    <button onclick="selectManualNum(1, 'Green')" class="bg-slate-950 hover:bg-green-900 border border-slate-800 p-2.5 rounded-lg text-sm font-bold text-green-400 num-select-btn">1</button>
+                    <button onclick="selectManualNum(2, 'Red')" class="bg-slate-950 hover:bg-red-900 border border-slate-800 p-2.5 rounded-lg text-sm font-bold text-red-400 num-select-btn">2</button>
+                    <button onclick="selectManualNum(3, 'Green')" class="bg-slate-950 hover:bg-green-900 border border-slate-800 p-2.5 rounded-lg text-sm font-bold text-green-400 num-select-btn">3</button>
+                    <button onclick="selectManualNum(4, 'Red')" class="bg-slate-950 hover:bg-red-900 border border-slate-800 p-2.5 rounded-lg text-sm font-bold text-red-400 num-select-btn">4</button>
+                    <button onclick="selectManualNum(5, 'Violet')" class="bg-slate-950 hover:bg-purple-900 border border-slate-800 p-2.5 rounded-lg text-sm font-bold text-purple-400 num-select-btn">5</button>
+                    <button onclick="selectManualNum(6, 'Red')" class="bg-slate-950 hover:bg-red-900 border border-slate-800 p-2.5 rounded-lg text-sm font-bold text-red-400 num-select-btn">6</button>
+                    <button onclick="selectManualNum(7, 'Green')" class="bg-slate-950 hover:bg-green-900 border border-slate-800 p-2.5 rounded-lg text-sm font-bold text-green-400 num-select-btn">7</button>
+                    <button onclick="selectManualNum(8, 'Red')" class="bg-slate-950 hover:bg-red-900 border border-slate-800 p-2.5 rounded-lg text-sm font-bold text-red-400 num-select-btn">8</button>
+                    <button onclick="selectManualNum(9, 'Green')" class="bg-slate-950 hover:bg-green-900 border border-slate-800 p-2.5 rounded-lg text-sm font-bold text-green-400 num-select-btn">9</button>
+                </div>
+            </div>
+
+            <div class="p-3 bg-slate-950 rounded-xl border border-slate-800/80 flex justify-between text-xs font-mono">
+                <div>Selected No: <span id="manSelectedNum" class="text-white font-bold">None</span></div>
+                <div>Mapped Color: <span id="manSelectedColor" class="text-white font-bold">None</span></div>
+            </div>
+
+            <button onclick="injectManualPrediction()" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-black text-xs uppercase py-3 rounded-xl active:scale-95 transition-transform shadow-lg cursor-pointer">
+                <i class="fa-solid fa-syringe mr-1.5"></i> Inject Manual Prediction
+            </button>
+            <div class="text-[10px] font-mono text-center text-slate-500" id="currentInjectedStatusDisplay">No manual result staged for next period.</div>
+        </div>
+
+        <div class="admin-card rounded-2xl p-4 space-y-3 shadow-md">
+            <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center">
+                <i class="fa-solid fa-list-ol mr-2 text-yellow-500"></i> Next 10 Rounds Result Injector Queue
+            </h2>
+            <p class="text-[11px] text-slate-400 leading-relaxed">Aane wale lagatar 10 rounds ka data ek sath sequence me set karein (Jaise: 0,Green,5,Red,2).</p>
+            
+            <div class="grid grid-cols-5 gap-2" id="sequenceInputsWrapper"></div>
+
+            <button onclick="commitBulkSequenceToDatabase()" class="w-full gold-gradient text-black font-black text-xs uppercase py-3 rounded-xl active:scale-95 transition-transform shadow-lg cursor-pointer">
+                <i class="fa-solid fa-layer-group mr-1.5"></i> Inject 10 Future Rounds Strategy
+            </button>
+            <div class="text-[10px] font-mono text-center text-slate-500 mt-1" id="currentActiveQueueStatus">No active sequence queue pending in database.</div>
+        </div>
+
+        <div class="admin-card rounded-2xl p-4 space-y-3 shadow-md">
+            <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center"><i class="fa-solid fa-sliders mr-2 text-yellow-500"></i> Gateways Configuration Settings</h2>
+            
+            <div class="space-y-3 text-xs">
+                <div>
+                    <label class="block text-slate-400 mb-1 font-semibold">Deposit Admin UPI ID</label>
+                    <input type="text" id="setupUpiId" placeholder="merchant@ybl" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white font-mono font-bold">
+                </div>
+                <div>
+                    <label class="block text-slate-400 mb-1 font-semibold">UPI Payment QR Image Asset Link URL</label>
+                    <input type="url" id="setupQrUrl" placeholder="https://imgur.com/image.png" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white font-mono text-xs">
+                </div>
+                <div>
+                    <label class="block text-slate-400 mb-1 font-semibold">24/7 Live Support Telegram/Chat URL</label>
+                    <input type="url" id="setupSupportUrl" placeholder="https://telegram.me/your_admin_handle" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white font-mono text-xs">
+                </div>
+            </div>
+
+            <button onclick="commitApplicationSettings()" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs uppercase py-3 rounded-xl active:scale-95 transition-transform border border-slate-700 shadow-md cursor-pointer">
+                <i class="fa-solid fa-circle-check mr-1.5"></i> Save Global Variables Gateway
+            </button>
+        </div>
+
+        <div class="admin-card rounded-2xl p-4 space-y-3 shadow-md">
+            <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center"><i class="fa-solid fa-money-bill-transfer mr-2 text-yellow-500"></i> User Placed Bets Monitoring Feed</h2>
+            <div class="overflow-x-auto rounded-xl border border-slate-800/60 max-h-60 overflow-y-auto">
+                <table class="w-full text-left text-xs">
+                    <thead class="bg-slate-900 text-slate-400 font-bold uppercase border-b border-slate-800">
+                        <tr>
+                            <th class="p-3">Period</th>
+                            <th class="p-3">Selection</th>
+                            <th class="p-3 text-right">Stake (₹)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminLiveBetsFeedRows" class="divide-y divide-slate-800/40 text-slate-300">
+                        <tr><td colspan="3" class="p-4 text-center text-slate-500 italic">No real-time bets registered yet in this session node.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, onValue, set, update, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        const firebaseConfig = {
+          apiKey: "AIzaSyBjB5uOFrL8OfuqAHWlyB5_p_say0KrFuY",
+          authDomain: "big-daddy-7422f.firebaseapp.com",
+          databaseURL: "https://big-daddy-7422f-default-rtdb.firebaseio.com",
+          projectId: "big-daddy-7422f",
+          storageBucket: "big-daddy-7422f.firebasestorage.app",
+          messagingSenderId: "528194459346",
+          appId: "1:528194459346:web:458044786db1c36281ff0b",
+          measurementId: "G-ZY2D9HT28C"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+
+        let currentGlobalPeriodId = "";
+        let globalSystemMode = "AUTO"; 
+        let stagedManualNum = null;
+        let stagedManualColor = null;
+        let executionBlockGate = false; // Prevents duplicate triggers within the same second frame
+
+        // Dynamic 10 Round Grids Generation
+        const inputWrapper = document.getElementById('sequenceInputsWrapper');
+        for (let i = 1; i <= 10; i++) {
+            inputWrapper.innerHTML += `
+                <div>
+                    <label class="block text-[9px] text-slate-500 font-bold text-center mb-0.5">R${i}</label>
+                    <input type="text" id="seqRound_${i}" placeholder="0-9" class="w-full bg-slate-950 border border-slate-800 text-center text-white font-mono font-black text-xs p-2 rounded-lg uppercase">
+                </div>
+            `;
+        }
+
+        // 1. Central Synchronization Engine & Automation Clock Loop
+        function runServerSyncTimer() {
+            setInterval(() => {
+                const now = new Date();
+                const totalSecs = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
+                const periodIndex = Math.floor(totalSecs / 30);
+                
+                const yearStr = now.getFullYear();
+                const monthStr = String(now.getMonth() + 1).padStart(2, '0');
+                const dateStr = String(now.getDate()).padStart(2, '0');
+                const computedPeriodId = `${yearStr}${monthStr}${dateStr}${String(periodIndex).padStart(4, '0')}`;
+                
+                if (computedPeriodId !== currentGlobalPeriodId) {
+                    currentGlobalPeriodId = computedPeriodId;
+                    document.getElementById('adminCurrentPeriodDisplay').innerText = currentGlobalPeriodId;
+                    executionBlockGate = false; // Reset lock gate on new period transition frame
+                }
+
+                const trackingRemainingSeconds = 30 - (now.getSeconds() % 30);
+                document.getElementById('adminCountdownClock').innerText = "00:" + String(trackingRemainingSeconds).padStart(2, '0');
+
+                // AUTOMATIC HAR ROUND END SETTLEMENT SYSTEM TRIGGER (At Exactly 00:00 marks)
+                if(trackingRemainingSeconds === 30 && !executionBlockGate) {
+                    executionBlockGate = true; 
+                    const closedPeriodTarget = String(BigInt(currentGlobalPeriodId) - 1n);
+                    executeRoundSettlementAutomatedPipeline(closedPeriodTarget);
+                }
+            }, 1000);
+        }
+        runServerSyncTimer();
+
+        // 2. Real-Time Processing Engine & Algorithmic Result Logic
+        async function executeRoundSettlementAutomatedPipeline(targetPeriodId) {
+            // Check if result already exists to avoid overwriting double loops
+            const checkResultNode = await get(ref(database, `game_results/${targetPeriodId}`));
+            if(checkResultNode.exists()) return;
+
+            let finalNumber = 0;
+            let finalColor = "Green";
+
+            if (globalSystemMode === "MANUAL" && stagedManualNum !== null) {
+                // Use Admin Injected Predict Result
+                finalNumber = parseInt(stagedManualNum);
+                finalColor = stagedManualColor;
+                
+                // Clear state variables for next sequence resets
+                stagedManualNum = null;
+                stagedManualColor = null;
+                document.getElementById('manSelectedNum').innerText = "None";
+                document.getElementById('manSelectedColor').innerText = "None";
+                set(ref(database, 'admin_settings/manual_staged'), null);
+            } else {
+                // Check if Bulk Queue contains data elements
+                const queueSnapshot = await get(ref(database, 'admin_settings/future_sequence'));
+                let bulkToken = "";
+                if(queueSnapshot.exists() && queueSnapshot.val() !== "") {
+                    let sequenceArray = queueSnapshot.val().split(',').map(s=>s.trim()).filter(s=>s!=="");
+                    if(sequenceArray.length > 0) {
+                        bulkToken = sequenceArray.shift();
+                        await set(ref(database, 'admin_settings/future_sequence'), sequenceArray.join(','));
+                    }
+                }
+
+                if (bulkToken !== "") {
+                    // Use bulk array queue token element
+                    finalNumber = parseInt(bulkToken);
+                    if([0,5].includes(finalNumber)) finalColor = "Violet";
+                    else if([2,4,6,8].includes(finalNumber)) finalColor = "Red";
+                    else finalColor = "Green";
+                } else {
+                    // PURE AUTO MODE: AI Algorithmic Random Number Generation
+                    finalNumber = Math.floor(Math.random() * 10);
+                    if([0,5].includes(finalNumber)) finalColor = "Violet";
+                    else if([2,4,6,8].includes(finalNumber)) finalColor = "Red";
+                    else finalColor = "Green";
+                }
+            }
+
+            // Write generated outcomes into Firebase Game Result tree paths
+            const finalPricePool = (Math.random() * 4000 + 1200).toFixed(2);
+            await set(ref(database, `game_results/${targetPeriodId}`), {
+                period: targetPeriodId,
+                number: finalNumber,
+                color: finalColor,
+                price: parseFloat(finalPricePool)
+            });
+        }
+
+        // 3. UI Sync Controllers For Mode Selection System Toggle
+        window.toggleSystemMode = function(targetMode) {
+            set(ref(database, 'admin_settings/system_mode'), targetMode)
+            .then(() => { console.log("System operational flow updated -> " + targetMode); })
+            .catch(err => { alert("Error updating mode node: " + err.message); });
+        };
+
+        onValue(ref(database, 'admin_settings/system_mode'), (snapshot) => {
+            const statusLabel = document.getElementById('currentSystemModeStatus');
+            const autoBtn = document.getElementById('modeAutoBtn');
+            const manualBtn = document.getElementById('modeManualBtn');
+            const manualView = document.getElementById('manualPredictSection');
+
+            if(snapshot.exists()) {
+                globalSystemMode = snapshot.val();
+            } else {
+                globalSystemMode = "AUTO";
+            }
+
+            if(globalSystemMode === "MANUAL") {
+                statusLabel.innerHTML = `Current Status: <span class="text-purple-400 font-bold"><i class="fa-solid fa-user-gear"></i> MANUAL INJECT MODE ACTIVE</span>`;
+                manualBtn.className = "w-full py-2.5 rounded-xl font-bold text-xs uppercase transition-all bg-purple-600 text-white border border-purple-500 shadow-md active:scale-95 cursor-pointer";
+                autoBtn.className = "w-full py-2.5 rounded-xl font-bold text-xs uppercase transition-all bg-slate-800 text-slate-400 border border-slate-700 active:scale-95 cursor-pointer";
+                manualView.style.display = "block";
+            } else {
+                statusLabel.innerHTML = `Current Status: <span class="text-green-400 font-bold"><i class="fa-solid fa-robot animate-pulse"></i> AUTO ALGO ENGINE ACTIVE</span>`;
+                autoBtn.className = "w-full py-2.5 rounded-xl font-bold text-xs uppercase transition-all bg-green-600 text-white border border-green-500 shadow-md active:scale-95 cursor-pointer";
+                manualBtn.className = "w-full py-2.5 rounded-xl font-bold text-xs uppercase transition-all bg-slate-800 text-slate-400 border border-slate-700 active:scale-95 cursor-pointer";
+                manualView.style.display = "none";
+            }
+        });
+
+        // 4. Manual Prediction Selector Logic Helpers
+        window.selectManualNum = function(num, color) {
+            stagedManualNum = num;
+            stagedManualColor = color;
+            document.getElementById('manSelectedNum').innerText = num;
+            document.getElementById('manSelectedColor').innerText = color;
+
+            // Highlight chosen buttons UI framework
+            const buttons = document.querySelectorAll('.num-select-btn');
+            buttons.forEach(btn => {
+                if(parseInt(btn.innerText) === num) {
+                    btn.style.border = "2px solid #a855f7";
+                    btn.style.backgroundColor = "rgba(168, 85, 247, 0.2)";
+                } else {
+                    btn.style.border = "1px solid #1e293b";
+                    btn.style.backgroundColor = "#020617";
+                }
+            });
+        };
+
+        window.injectManualPrediction = function() {
+            if(stagedManualNum === null) {
+                alert("Please select a number before attempting prediction injection!");
+                return;
+            }
+            
+            set(ref(database, 'admin_settings/manual_staged'), {
+                number: stagedManualNum,
+                color: stagedManualColor
+            })
+            .then(() => { alert(`Success! Mapped values [${stagedManualNum} - ${stagedManualColor}] into next processing buffer.`); })
+            .catch(err => { alert("Error uploading manual state packet: " + err.message); });
+        };
+
+        // Realtime Listener to display current manual buffer status 
+        onValue(ref(database, 'admin_settings/manual_staged'), (snapshot) => {
+            const infoText = document.getElementById('currentInjectedStatusDisplay');
+            if(snapshot.exists()) {
+                const d = snapshot.val();
+                stagedManualNum = d.number;
+                stagedManualColor = d.color;
+                document.getElementById('manSelectedNum').innerText = stagedManualNum;
+                document.getElementById('manSelectedColor').innerText = stagedManualColor;
+                infoText.innerHTML = `<span class="text-purple-400 font-bold">Staged Buffer Lock:</span> [No: ${d.number} | Color: ${d.color}] ready for execution frame.`;
+            } else {
+                infoText.innerText = "No manual result staged for next period.";
+            }
+        });
+
+        // 5. Bulk Sequence Processor Engine Hooks
+        window.commitBulkSequenceToDatabase = function() {
+            let parsedCollection = [];
+            for (let i = 1; i <= 10; i++) {
+                let tokenValue = document.getElementById(`seqRound_${i}`).value.trim();
+                if (tokenValue !== "") {
+                    parsedCollection.push(tokenValue);
+                }
+            }
+            if (parsedCollection.length === 0) {
+                alert("Please enter at least 1 value in input sequence grids!");
+                return;
+            }
+            const formattedSequencePayloadString = parsedCollection.join(',');
+            set(ref(database, 'admin_settings/future_sequence'), formattedSequencePayloadString)
+            .then(() => {
+                alert(`Successfully queued ${parsedCollection.length} rounds into system core line pipes!`);
+                for (let i = 1; i <= 10; i++) { document.getElementById(`seqRound_${i}`).value = ""; }
+            })
+            .catch(err => { alert("Database write fault array sequence: " + err.message); });
+        };
+
+        onValue(ref(database, 'admin_settings/future_sequence'), (snapshot) => {
+            const labelTextNode = document.getElementById('currentActiveQueueStatus');
+            if (snapshot.exists() && snapshot.val() !== "") {
+                labelTextNode.innerHTML = `<span class="text-green-400 font-bold"><i class="fa-solid fa-circle-nodes animate-spin mr-1"></i> Queue Pipeline:</span> ${snapshot.val()}`;
+            } else {
+                labelTextNode.innerText = "No active sequence queue pending in database.";
+            }
+        });
+
+        // 6. Global Gateways Layout Logic Configuration Handler Hooks
+        window.commitApplicationSettings = function() {
+            const upi = document.getElementById('setupUpiId').value.trim();
+            const qr = document.getElementById('setupQrUrl').value.trim();
+            const support = document.getElementById('setupSupportUrl').value.trim();
+            if(!upi || !qr || !support) {
+                alert("Environment high priority parameter files cannot be left blank.");
+                return;
+            }
+            update(ref(database, 'admin_settings'), {
+                upi_id: upi,
+                qr_url: qr,
+                support_url: support
+            })
+            .then(() => { alert("Global Gateways successfully mapped!"); })
+            .catch(err => { alert("Sync mapping write fault error: " + err.message); });
+        };
+
+        get(ref(database, 'admin_settings')).then((snapshot) => {
+            if(snapshot.exists()){
+                const serverData = snapshot.val();
+                if(serverData.upi_id) document.getElementById('setupUpiId').value = serverData.upi_id;
+                if(serverData.qr_url) document.getElementById('setupQrUrl').value = serverData.qr_url;
+                if(serverData.support_url) document.getElementById('setupSupportUrl').value = serverData.support_url;
+            }
+        });
+
+        // 7. Dynamic Continuous Monitoring Feeds For User Placed Tickets Matrix
+        onValue(ref(database, 'bets'), (snapshot) => {
+            const feedContainer = document.getElementById('adminLiveBetsFeedRows');
+            feedContainer.innerHTML = "";
+            if (!snapshot.exists()) {
+                feedContainer.innerHTML = `<tr><td colspan="3" class="p-4 text-center text-slate-500 italic">No user tickets available.</td></tr>`;
+                return;
+            }
+            const collectivePayloadArray = Object.values(snapshot.val());
+            collectivePayloadArray.sort((x, y) => y.timestamp.localeCompare(x.timestamp));
+            collectivePayloadArray.slice(0, 15).forEach(ticket => {
+                let badgeClass = "text-slate-400";
+                if(["Green","Red","Violet"].includes(ticket.selection)){
+                    badgeClass = ticket.selection === "Green" ? "text-green-400" : (ticket.selection === "Red" ? "text-red-400" : "text-purple-400");
+                } else {
+                    badgeClass = "text-yellow-500 font-bold font-mono";
+                }
+                feedContainer.innerHTML += `
+                    <tr class="hover:bg-slate-900/30 transition-colors">
+                        <td class="p-3 font-mono font-bold text-white">${ticket.period || '----'}</td>
+                        <td class="p-3 uppercase font-black text-xs ${badgeClass}">${ticket.selection}</td>
+                        <td class="p-3 text-right font-mono font-black text-amber-500">₹${parseFloat(ticket.amount || 0).toFixed(2)}</td>
+                    </tr>
+                `;
+            });
+        });
+    </script>
+</body>
+</html>
