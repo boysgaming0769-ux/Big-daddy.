@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -55,7 +54,7 @@
                 <button onclick="setRechargeAmount(5000)" class="bg-[#0c1015] border border-gray-800 py-2 rounded-lg font-bold text-xs text-gray-300 active:scale-95 transition-transform cursor-pointer">₹5,000</button>
             </div>
 
-            <button onclick="proceedToPayment()" class="w-full gold-gradient text-black font-extrabold py-3 rounded-xl shadow-lg uppercase text-xs tracking-wider font-bold cursor-pointer">
+            <button onclick="proceedToPayment()" class="w-full gold-gradient text-black font-extrabold py-3 rounded-xl shadow-lg uppercase text-xs tracking-wider cursor-pointer">
                 Proceed to Pay
             </button>
         </div>
@@ -70,7 +69,7 @@
             <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">2. Scan QR Code or Pay via UPI</p>
 
             <div class="bg-white p-3 rounded-xl inline-block mx-auto border-4 border-yellow-500/30">
-                <img id="adminQrImage" src="https://via.placeholder.com/200?text=Loading+QR..." alt="Admin Payment QR" class="w-44 h-44 object-contain">
+                <img id="adminQrImage" src="https://i.ibb.co/7t5HtKMV/IMG-20260530-WA0000.jpg" alt="Payment QR Code" class="w-44 h-44 object-contain">
             </div>
 
             <div class="bg-[#0c1015] border border-gray-800 rounded-xl p-3 flex justify-between items-center text-left">
@@ -116,7 +115,6 @@
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-        // Your New Web App's production configuration details
         const firebaseConfig = {
           apiKey: "AIzaSyBjB5uOFrL8OfuqAHWlyB5_p_say0KrFuY",
           authDomain: "big-daddy-7422f.firebaseapp.com",
@@ -149,20 +147,26 @@
             }
         });
 
-        // 2. Fetch Admin QR Image & UPI Dynamic Strings
+        // 2. Fetch Admin QR Image & UPI Strings
         onValue(ref(database, 'admin_settings'), (snapshot) => {
             if(snapshot.exists()) {
                 const settings = snapshot.val();
                 if(settings.deposit_upi) document.getElementById('adminUpiId').innerText = settings.deposit_upi;
-                if(settings.deposit_qr_url) document.getElementById('adminQrImage').src = settings.deposit_qr_url;
+                
+                // Agar database me link hai toh wo dikhega, nahi toh aapka naya link fallback banega
+                if(settings.deposit_qr_url) {
+                    document.getElementById('adminQrImage').src = settings.deposit_qr_url;
+                } else {
+                    document.getElementById('adminQrImage').src = "https://i.ibb.co/7t5HtKMV/IMG-20260530-WA0000.jpg";
+                }
             } else {
-                // System default standard fallbacks
+                // System default fallback settings
                 document.getElementById('adminUpiId').innerText = "bigdaddy@ybl";
-                document.getElementById('adminQrImage').src = "https://via.placeholder.com/200?text=No+QR+Set+By+Admin";
+                document.getElementById('adminQrImage').src = "https://i.ibb.co/7t5HtKMV/IMG-20260530-WA0000.jpg";
             }
         });
 
-        // 3. UI Workflow Control (Proceed Button Handler)
+        // 3. UI Workflow Control
         window.proceedToPayment = function() {
             const amount = parseInt(document.getElementById('rechargeAmount').value);
             if(isNaN(amount) || amount < 100) {
@@ -170,11 +174,9 @@
                 return;
             }
 
-            // UI view shifts
             document.getElementById('stepAmountBox').classList.add('hidden');
             document.getElementById('paymentGatewayBox').classList.remove('hidden');
 
-            // 4. Start 120-Second Precision Countdown Timer
             startRechargeCountdown(120);
         }
 
@@ -196,7 +198,6 @@
                 if (--timeLeft < 0) {
                     clearInterval(countdownTimer);
                     alert("Payment window expired! Please initiate a new recharge transaction request.");
-                    // Reset View layout state
                     document.getElementById('paymentGatewayBox').classList.add('hidden');
                     document.getElementById('stepAmountBox').classList.remove('hidden');
                     document.getElementById('utrNumber').value = "";
@@ -204,17 +205,18 @@
             }, 1000);
         }
 
-        // 5. Submit Structured Payload Logs to Database
+        // 4. Submit Payload Logs to Database
         window.submitRechargeRequest = function() {
             const amount = parseInt(document.getElementById('rechargeAmount').value);
             const utr = document.getElementById('utrNumber').value.trim();
 
-            if(utr.length !== 12 || isNaN(utr)) {
+            // Strict 12-digit numeric check using Regex
+            if(!/^\d{12}$/.test(utr)) {
                 alert("Please type a valid 12-digit numeric transaction UTR code.");
                 return;
             }
 
-            clearInterval(countdownTimer); // Stop timer on successful submit actions
+            clearInterval(countdownTimer);
             const requestId = "REQ" + Math.floor(100000 + Math.random() * 900000);
 
             set(ref(database, 'recharge_requests/' + requestId), {
@@ -228,7 +230,6 @@
             })
             .then(() => {
                 alert("Transaction details recorded!\nAdmin will cross-check your 12-Digit UTR and fund your balance wallet shortly.");
-                // Redirect back to main dashboard area
                 window.location.href = "game.html";
             })
             .catch((err) => {
@@ -236,7 +237,7 @@
             });
         }
 
-        // Global Window Tools
+        // Global Utility Functions
         window.setRechargeAmount = function(amt) { document.getElementById('rechargeAmount').value = amt; }
         window.copyAdminUpi = function() {
             const upiText = document.getElementById('adminUpiId').innerText;
